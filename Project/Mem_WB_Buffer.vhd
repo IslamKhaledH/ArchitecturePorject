@@ -63,9 +63,9 @@ entity Mem_WB_Buffer is
 				--n : in std_logic 
 
 				);
-end E_M_Buffer;
+end Mem_WB_Buffer;
 
-architecture arch_E_M_Buffer of E_M_Buffer is
+architecture arch_Mem_WB_Buffer of Mem_WB_Buffer is
 	component Regis is
 		port( 
 				Clk,Rst,enable : in std_logic;
@@ -94,7 +94,7 @@ architecture arch_E_M_Buffer of E_M_Buffer is
 	--r2_shift_mux_map : 			Regis port map(Clk,Rst,enable,r2_shift_mux_input,r2_shift_mux_output);
 	--r1_forward_mux_map : 		Regis port map(Clk,Rst,enable,r1_forward_mux_input,r1_forward_mux_output);
 	--r2_forward_mux_map :		 Regis port map(Clk,Rst,enable,r2_forward_mux_input,r2_forward_mux_output);
-	write_reg_mux_map : 		Regis port map(Clk,Rst,enable,write_reg_mux_input,write_reg_mux_output);
+	--write_reg_mux_map : 		Regis port map(Clk,Rst,enable,write_reg_mux_input,write_reg_mux_output);
 	write_back_mux_map : 		nreg generic map (n=>16)port map(Clk,Rst,enable,write_back_mux_input,write_back_mux_output);
 	--flags_en_map : 				Regis port map(Clk,Rst,enable,flags_en_input,flags_en_output);
 	flags_rti_en_map : 			Regis port map(Clk,Rst,enable,flags_rti_en_input,flags_rti_en_output);
@@ -106,4 +106,4 @@ architecture arch_E_M_Buffer of E_M_Buffer is
 	
 	
 
-end arch_E_M_Buffer; 
+end arch_Mem_WB_Buffer; 

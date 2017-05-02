@@ -94,7 +94,7 @@ begin
 							d3 <= input_port;
 						elsif w_sel = "011" then
 							d4 <= input_port;
-						elsif w_sel = "100" then
+						elseif w_sel = "100" then
 							d5 <= input_port;
 						elsif w_sel = "101"then
 							d6 <= input_port;
