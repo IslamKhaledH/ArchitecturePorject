@@ -4,7 +4,7 @@ Use ieee.std_logic_1164.all;
 Entity REG is
 	Generic ( n : integer := 16);
 		port( 
-				Clk,Rst : in std_logic;
+				Clk,Rst,enable : in std_logic;
 				d : in std_logic_vector(n-1 downto 0);
 				q : out std_logic_vector(n-1 downto 0);
 				port1_data, port2_data : out std_logic_vector(15 downto 0);
@@ -25,15 +25,12 @@ Entity REG is
 end REG;
 
 Architecture REG_arc of REG is
-	Component nreg is
-		port( 
-				Clk,Rst : in std_logic;
-				d : in std_logic_vector(n-1 downto 0);
-				q : out std_logic_vector(n-1 downto 0)
-			
-				
-		
-			);	
+	component nreg is
+		Generic ( n : integer := 16);
+			port( 
+					Clk,Rst,enable : in std_logic;
+					d : in std_logic_vector(n-1 downto 0);
+					q : out std_logic_vector(n-1 downto 0));
 	end component;
 	
 	signal d1,d2,d3,d4,d5,d6,d7,d8 : std_logic_vector(15 downto 0);
@@ -42,12 +39,12 @@ Architecture REG_arc of REG is
 	
 	
 begin
-		R1: nreg port map (clk, RST, d1,q1);
-		R2: nreg port map (clk, RST, d2,q2);
-		R3: nreg port map (clk, RST, d3,q3);
-		R4: nreg port map (clk, RST, d4,q4);
-		R5: nreg port map (clk, RST, d5,q5);
-		R6: nreg port map (clk, RST, d6,q6);
+		R1: nreg generic map (n=>16)port map(Clk,Rst,enable,d1,q1);
+		R2: nreg generic map (n=>16)port map(Clk,Rst,enable,d2,q2);
+		R3: nreg generic map (n=>16)port map(Clk,Rst,enable,d3,q3);
+		R4: nreg generic map (n=>16)port map(Clk,Rst,enable,d4,q4);
+		R5: nreg generic map (n=>16)port map(Clk,Rst,enable,d5,q5);
+		R6: nreg generic map (n=>16)port map(Clk,Rst,enable,d6,q6);
 		--R7: nreg port map (clk, RST, d7,q7);
 		
 		
@@ -129,8 +126,8 @@ begin
 				elsif Port2_sel = "001" then Port2_data <= q2;
 				elsif Port2_sel = "010" then Port2_data <= q3;
 				elsif Port2_sel = "011" then Port2_data <=q4 ;
-				elsif Port1_sel = "100" then Port1_data <= q5;
-				elsif Port1_sel = "101" then Port1_data <= q6;
+				elsif Port1_sel = "100" then Port2_data <= q5;
+				elsif Port1_sel = "101" then Port2_data <= q6;
 				--elsif Port1_sel = "110" then Port1_data <= q7;
 				
 				
