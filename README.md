@@ -1,2 +1,2 @@
-# ArchitecturePorject
-Create a processor
+# Architecture Porject
+Create a processor for college
