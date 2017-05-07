@@ -8,7 +8,10 @@ port ( clk : in std_logic;
 we : in std_logic;
 address : in std_logic_vector(n-1 downto 0);
 datain : in std_logic_vector(15 downto 0);
-dataout : out std_logic_vector(15 downto 0) );
+dataout : out std_logic_vector(15 downto 0);
+dataout0 : out std_logic_vector(15 downto 0);
+dataout1 : out std_logic_vector(15 downto 0) 
+);
 end entity syncram;
 
 architecture syncrama of syncram is
@@ -24,4 +27,6 @@ if rising_edge(clk) then
 end if;
 end process;
 dataout <= ram(to_integer(unsigned(address)));
+dataout0 <= ram(0);
+dataout1 <= ram(1);
 end architecture syncrama;

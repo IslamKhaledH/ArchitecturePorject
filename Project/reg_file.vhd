@@ -12,7 +12,7 @@ Entity REG is
 				w_sel,port1_sel,port2_sel : in std_logic_vector(2 downto 0);
 				
 				input_port : in std_logic_vector(15 downto 0);
-				wrt_data_reg_mux : in std_logic;
+				wrt_data_reg_mux : in std_logic
 				
 				--stack_en : in std_logic_vector(1 downto 0);
 				--stack_plus : in std_logic;

@@ -8,60 +8,22 @@ entity Mem_WB_Buffer is
 				Clk : in std_logic;
 				Rst : in std_logic;
 				enable : in std_logic;
-				--pc_mux : in std_logic_vector(1 downto 0);
+				
+				--Input
+				pc_mux_input : in std_logic_vector(1 downto 0);
 				outport_en_input : in std_logic; 
 				reg_write_input : in std_logic; 
-				mem_read_input : in std_logic; 
-				mem_write_input : in std_logic; 
 				write_data_reg_mux_input : in std_logic; 
-				--r1_load_mux : in std_logic;                 --deleted from desgin
-				--r2_shift_mux_input : in std_logic;
-				--r1_forward_mux_input : in std_logic;               --always 0 be 1 if only make forward so take signal from forward to mux to make it 1 
-				--r2_forward_mux_input : in std_logic; 				--always 0 be 1 if only make forward so take signal from forward to mux to make it 1 
-				--write_reg_mux_input : in std_logic;  
-				write_back_mux_input : in std_logic_vector(1 downto 0);
-				
-				--flags_en_input : in std_logic; 
-				flags_rti_en_input : in std_logic; 
-				--alu_control_input : in std_logic;                 --change it according to alu control (3 bit ****)علي حسب شغلك   'musgi'
-				mem_mux_input : in std_logic;  
-				--stack_plus : in std_logic;  
-				--stack_minus : in std_logic;  
-				--stack_en : in std_logic_vector(1 downto 0);
-				
-				--load_value_15_0 : in std_logic_vector(15 downto 0); --jump from fetch to ext (without decode)
-				load_store_address_input : in std_logic_vector(15 downto 0);
-				
-				--n : in std_logic 
-				
-				
-				
-				--pc_mux : out std_logic_vector(1 downto 0);
+				write_back_mux_input : in std_logic_vector(1 downto 0);				
+				flags_en_input : in std_logic; 
+
+				--Output
+				pc_mux_output : out std_logic_vector(1 downto 0);
 				outport_en_output : out std_logic; 
 				reg_write_output : out std_logic; 
-				mem_read_output : out std_logic; 
-				mem_write_output : out std_logic; 
 				write_data_reg_mux_output : out std_logic; 
-				--r1_load_mux : out std_logic;                 --deleted from desgin
-				--r2_shift_mux_output : out std_logic;
-				--r1_forward_mux_output : out std_logic;               --always 0 be 1 if only make forward so take signal from forward to mux to make it 1 
-				--r2_forward_mux_output : out std_logic; 				--always 0 be 1 if only make forward so take signal from forward to mux to make it 1 
-				--write_reg_mux_output : out std_logic;  
-				write_back_mux_output: out std_logic_vector(1 downto 0);
-				
-				--flags_en_output : out std_logic; 
-				flags_rti_en_output : out std_logic; 
-				--alu_control_output : out std_logic;                 --change it according to alu control (3 bit ****)علي حسب شغلك   'musgi'
-				mem_mux_output : out std_logic;  
-				--stack_plus : out std_logic;  
-				--stack_minus : out std_logic;  
-				--stack_en : out std_logic_vector(1 downto 0);
-				
-				--load_value_15_0 : in std_logic_vector(15 downto 0); --jump from fetch to ext (without decode)
-				load_store_address_output : out std_logic_vector(15 downto 0)
-				
-				--n : in std_logic 
-
+				write_back_mux_output : out std_logic_vector(1 downto 0);				
+				flags_en_output : out std_logic
 				);
 end Mem_WB_Buffer;
 
