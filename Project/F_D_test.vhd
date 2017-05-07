@@ -18,7 +18,7 @@ entity Ext_Mem_Buffer is
 				
 				inport_en_output : out std_logic_vector(15 downto 0); --??????????????
 				
-				instruction_output :out std_logic_vector(15 downto 0);
+				instruction_output :out std_logic_vector(15 downto 0)
 				
 				
 				
@@ -89,7 +89,7 @@ architecture arch_Ext_Mem_Buffer of Ext_Mem_Buffer is
 		
 		
 ---------for LDM   LDD   and store
-		op_code_map :	nreg generic map (n=>5)port map(Clk,Rst,en_signal_nop,"00000",OPcode);
+		op_code_map2 :	nreg generic map (n=>5)port map(Clk,Rst,en_signal_nop,"00000",OPcode);
 
 		
 		

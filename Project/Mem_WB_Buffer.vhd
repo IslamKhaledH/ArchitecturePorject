@@ -1,5 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 
 entity Mem_WB_Buffer is 
@@ -45,25 +46,11 @@ architecture arch_Mem_WB_Buffer of Mem_WB_Buffer is
 			);
 	end component;
 
-
+	
 	begin
 
-	outport_en_map :	 		Regis port map(Clk,Rst,enable,outport_en_input,outport_en_output);
-	--reg_write_map : 			Regis port map(Clk,Rst,enable,reg_write_input,reg_write_output);
-	mem_read_map : 				Regis port map(Clk,Rst,enable,mem_read_input,mem_read_output);
-	mem_write_map : 			Regis port map(Clk,Rst,enable,mem_write_input,mem_write_output);
-	write_data_reg_mux_map : 	Regis port map(Clk,Rst,enable,write_data_reg_mux_input,write_data_reg_mux_output);
-	--r2_shift_mux_map : 			Regis port map(Clk,Rst,enable,r2_shift_mux_input,r2_shift_mux_output);
-	--r1_forward_mux_map : 		Regis port map(Clk,Rst,enable,r1_forward_mux_input,r1_forward_mux_output);
-	--r2_forward_mux_map :		 Regis port map(Clk,Rst,enable,r2_forward_mux_input,r2_forward_mux_output);
-	--write_reg_mux_map : 		Regis port map(Clk,Rst,enable,write_reg_mux_input,write_reg_mux_output);
-	write_back_mux_map : 		nreg generic map (n=>16)port map(Clk,Rst,enable,write_back_mux_input,write_back_mux_output);
-	--flags_en_map : 				Regis port map(Clk,Rst,enable,flags_en_input,flags_en_output);
-	flags_rti_en_map : 			Regis port map(Clk,Rst,enable,flags_rti_en_input,flags_rti_en_output);
-	--alu_control_map : 			Regis port map(Clk,Rst,enable,alu_control_input,alu_control_output);
-	mem_mux_map : 				Regis port map(Clk,Rst,enable,mem_mux_input,mem_mux_output);
-	load_store_address_map : 	nreg generic map (n=>16)port map(Clk,Rst,enable,load_store_address_input,load_store_address_output);
-	
+	--pc_mux_map : Regis port map(Clk,Rst,enable,pc_mux_input,pc_mux_output);
+	pc_mux_map : nreg generic map (n=>2)port map(Clk,Rst,'1',pc_mux_input,pc_mux_output);
 	
 	
 	
