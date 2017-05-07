@@ -14,12 +14,12 @@ Entity REG is
 				input_port : in std_logic_vector(15 downto 0);
 				wrt_data_reg_mux : in std_logic;
 				
-				stack_en : in std_logic_vector(1 downto 0);
-				stack_plus : in std_logic;
-				stack_minus : in std_logic;
-				stack_counter : in std_logic_vector(9 downto 0);
+				--stack_en : in std_logic_vector(1 downto 0);
+				--stack_plus : in std_logic;
+				--stack_minus : in std_logic;
+				--stack_counter : in std_logic_vector(9 downto 0);
 				
-				load_value_15_0 : in std_logic_vector(15 downto 0)
+				--load_value_15_0 : in std_logic_vector(15 downto 0)
 				
 			);
 end REG;
