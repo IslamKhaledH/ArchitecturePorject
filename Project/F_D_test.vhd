@@ -28,7 +28,7 @@ entity Ext_Mem_Buffer is
 				--Rout: out std_logic_vector(2 downto 0 ); --for write back
 				--LDD_Memory: out std_logic_vector(9 downto 0 ); --load value from memory to register
 				--LDM_immediate: out std_logic_vector(15 downto 0 ); --load immediate value from user to register
-				input_port : in std_logic_vector(15 downto 0 )
+				--input_port : in std_logic_vector(15 downto 0 )
 				
 				
 				);
@@ -64,6 +64,7 @@ architecture arch_Ext_Mem_Buffer of Ext_Mem_Buffer is
 	signal R2:  std_logic_vector(2 downto 0 ); --addres of reg2
 	signal Rout: std_logic_vector(2 downto 0 ); --for write back
 	signal en_signal: std_logic;
+	signal en_signal_nop: std_logic;
 	
 	
 
@@ -75,7 +76,7 @@ architecture arch_Ext_Mem_Buffer of Ext_Mem_Buffer is
 		
 
 		inport_en_map :	 nreg generic map (n=>16)port map(Clk,Rst,en_signal,inport_en_input,inport_en_output);
-		instruction_map :	nreg generic map (n=>16)port map(Clk,Rst,en_signal,instruction_input,instruction_output);
+		--instruction_map :	nreg generic map (n=>16)port map(Clk,Rst,en_signal,instruction_input,instruction_output);
 		
 		op_code_map :	nreg generic map (n=>5)port map(Clk,Rst,en_signal,instruction_input(15 downto 11),OPcode);
 		R1_map :	nreg generic map (n=>3)port map(Clk,Rst,en_signal,instruction_input(10 downto 8),R1);
@@ -87,14 +88,9 @@ architecture arch_Ext_Mem_Buffer of Ext_Mem_Buffer is
 		
 		
 		
-		
-		--OPcode<=instruction_input[15 down to 11];
-		--R1 <=instruction_input[10 down to 8];
-		--R2 <=instruction_input[7 down to 5];
-	--	Rout <= instruction_input[4 downto 2];
+---------for LDM   LDD   and store
+		op_code_map :	nreg generic map (n=>5)port map(Clk,Rst,en_signal_nop,"00000",OPcode);
 
-
-		--input_port_signal <= input_port;
 		
 		
 		process(clk) is
@@ -102,13 +98,16 @@ architecture arch_Ext_Mem_Buffer of Ext_Mem_Buffer is
 			if (rising_edge(clk) or falling_edge(clk)) and instruction_input(15 downto 11)="11011" then
 				OPcode_nop <= "00000";
 				en_signal <='0';
+				en_signal_nop <='1';
 				LDM_immediate_signal<=instruction_input(15 downto 0);
 			elsif (rising_edge(clk) or falling_edge(clk)) and (instruction_input(15 downto 11)>="11100" and instruction_input(15 downto 11)<="11101") then
 				OPcode_nop <= "00000";
 				en_signal <='0';
+				en_signal_nop <='1';
 				LDD_Memory_signal<=instruction_input(15 downto 6);
 			else
 				en_signal <='1';
+				en_signal_nop <='0';
 			end if;
 
 	end process;
