@@ -101,7 +101,7 @@ Generic ( n : integer := 16);
 			);
 	end component;
 --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-component exec is
+component ALU is
 		port( 
 				Clk,Rst,enable : in std_logic;
     OpCode : in  std_logic_vector(4 downto 0);
@@ -146,7 +146,11 @@ component exec is
 	signal	Rout_out_signal1 :  std_logic_vector(2 downto 0 ); 
 	signal R_shift_out_signal:  std_logic_vector(3 downto 0 ); 
 --Execution signals 
-
+	signal Output_signal: std_logic_vector(15 downto 0);
+	signal ZF_signal:  std_logic;
+	signal N_signal:  std_logic;
+	signal v_signal:  std_logic;
+	signal C_signal: std_logic;
 
 	begin
 	
@@ -158,7 +162,10 @@ component exec is
 	BUFFER1: fetch_Buffer generic map (n =>16) port map (CLK,RESET,OutPort_signal,Out_instruction_signal,inport_en_output_signal,instruction_output_signal,OPcode_signal,R1_signal,R2_signal,Rout_signal,R_shift_signal,LDD_Memory_signal,LDM_immediate_signal);
 	Decoder: REG generic map (n=>16)port map(CLK,RESET,"1111000011110000",R1_Out_signal,R2_Out_signal,write_enable,Rout_signal,R1_signal,R2_signal,inport_en_output_signal,datavsinport,Shift_Mux);
 	Buffer2 : Decode_Buffer port map(CLK,RESET,R1_Out_signal,R2_Out_signal,Rout_signal,R1_out_signal1,R2_out_signal1,Rout_out_signal1,R_shift_signal,R_shift_out_signal);	
-	ALU: ALU port map(CLK,RESET,);	
-
+	ALU: ALU port map(CLK,RESET,'1',?????????,R1_out_signal1,R2_out_signal1,Output_signal, R_shift_out_signal,ZF_signal,N_signal,v_signal,C_signal);	
+--  Buffer3:
+--  Memory:
+--	Buffer4:
+--  WB:
 end Main_Processor_arch;
 
