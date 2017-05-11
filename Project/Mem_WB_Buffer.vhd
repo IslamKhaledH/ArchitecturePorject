@@ -49,9 +49,12 @@ architecture arch_Mem_WB_Buffer of Mem_WB_Buffer is
 	
 	begin
 
-	--pc_mux_map : Regis port map(Clk,Rst,enable,pc_mux_input,pc_mux_output);
-	pc_mux_map : nreg generic map (n=>2)port map(Clk,Rst,'1',pc_mux_input,pc_mux_output);
-	
+	pc_mux_map : nreg generic map (n=>2)port map(Clk,Rst,enable,pc_mux_input,pc_mux_output);
+	outport_en_map : Regis port map(Clk,Rst,enable,outport_en_input,outport_en_output);
+	reg_write_map : Regis port map(Clk,Rst,enable,reg_write_input,reg_write_output);
+	write_data_reg_mux_map : Regis port map(Clk,Rst,enable,write_data_reg_mux_input,write_data_reg_mux_output); 
+	write_back_mux_map : nreg generic map (n=>1)port map(Clk,Rst,enable,write_back_mux_input,write_back_mux_output);			
+	flags_en_map : Regis port map(Clk,Rst,enable,flags_en_input,flags_en_output);
 	
 	
 
