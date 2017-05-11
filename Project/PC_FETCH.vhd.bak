@@ -7,7 +7,8 @@ use ieee.numeric_std.all;
 entity PC is 
 port (
 
-	counter: in std_logic_vector(15 downto 0 ); 
+	counter: in std_logic_vector(15 downto 0 ); --
+	
 	new_counter: out std_logic_vector(15 downto 0 );
 	CLK: in std_logic;
 	RESET: in std_logic

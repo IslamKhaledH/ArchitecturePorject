@@ -1,0 +1,129 @@
+
+library  ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_signed.all;
+use ieee.numeric_std.all;
+ 
+entity Decoder is 
+port (
+	
+		
+	instruction: in std_logic_vector(15 downto 0 );
+
+	OPcode: out std_logic_vector(4 downto 0 ); 
+	R1: out std_logic_vector(2 downto 0 ); --addres of reg1
+	R2: out std_logic_vector(2 downto 0 ); --addres of reg2
+	Rout: out std_logic_vector(2 downto 0 ); --for write back
+	LDD_Memory: out std_logic_vector(9 downto 0 ); --load value from memory to register
+	LDM_immediate: out std_logic_vector(15 downto 0 ); --load immediate value from user to register
+
+);
+end entity Decoder;
+
+
+
+
+architecture Decoder_Arch of Decoder is 
+
+
+
+
+
+--***********************************************************************************
+Component REG is
+Generic ( n : integer := 16);
+port ( 
+
+	Clk,Rst,enable : in std_logic;
+				d : in std_logic_vector(n-1 downto 0);
+				q : out std_logic_vector(n-1 downto 0);
+				port1_data, port2_data : out std_logic_vector(15 downto 0);
+				w_en : in std_logic ;
+				w_sel,port1_sel,port2_sel : in std_logic_vector(2 downto 0);
+				
+				input_port : in std_logic_vector(15 downto 0);
+				wrt_data_reg_mux : in std_logic;
+				
+				stack_en : in std_logic_vector(1 downto 0);
+				stack_plus : in std_logic;
+				stack_minus : in std_logic;
+				stack_counter : in std_logic_vector(9 downto 0);
+				
+				load_value_15_0 : in std_logic_vector(15 downto 0)
+);
+end component;
+
+
+Component control is
+
+port ( 
+
+	op_code: in std_logic_vector(4 downto 0);
+			pc_mux : out std_logic_vector(1 downto 0);
+			pc_en : out std_logic; 
+			inport_en : out std_logic; 
+			outport_en : out std_logic; 
+			reg_read : out std_logic; 
+			reg_write : out std_logic; 
+			mem_read : out std_logic; 
+			mem_write : out std_logic; 
+			write_data_reg_mux : out std_logic; 
+			r1_load_mux : out std_logic;                 --deleted from desgin
+			r2_shift_mux : out std_logic;
+			r1_forward_mux : out std_logic;               --always 0 be 1 if only make forward so take signal from forward to mux to make it 1 
+			r2_forward_mux : out std_logic; 				--always 0 be 1 if only make forward so take signal from forward to mux to make it 1 
+			write_reg_mux : out std_logic;  
+			write_back_mux : out std_logic_vector(1 downto 0);
+			flags_en : out std_logic; 
+			flags_rti_en : out std_logic; 
+			alu_control : out std_logic;                 --change it according to alu control (3 bit ****)علي حسب شغلك   'musgi'
+			mem_mux : out std_logic;  
+			stack_plus : out std_logic;  
+			stack_minus : out std_logic;  
+			stack_en : out std_logic_vector(1 downto 0);
+			
+			n : in std_logic 
+);
+end component;
+--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+signal fake1: std_logic_vector(15 downto 0);
+signal enable_LoadStore: std_logic;
+signal fake2: std_logic_vector(15 downto 0);
+signal fake3: std_logic_vector(15 downto 0);
+signal fake4: std_logic_vector(15 downto 0);
+signal fake5: std_logic_vector(15 downto 0);
+signal fake6: std_logic_vector(15 downto 0);
+signal fake7: std_logic_vector(15 downto 0);
+signal fake8: std_logic_vector(15 downto 0);
+signal fake9: std_logic_vector(15 downto 0);
+signal fake10: std_logic_vector(15 downto 0);
+signal fake11: std_logic_vector(15 downto 0);
+signal fake12: std_logic_vector(15 downto 0);
+signal fake13: std_logic_vector(15 downto 0);
+signal fake14: std_logic_vector(15 downto 0);
+signal fake15: std_logic_vector(15 downto 0);
+signal fake16: std_logic_vector(15 downto 0);
+signal fake17: std_logic_vector(15 downto 0);
+signal fake18: std_logic_vector(15 downto 0);
+signal fake19: std_logic_vector(15 downto 0);
+signal fake20: std_logic_vector(15 downto 0);
+
+--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+begin 
+
+OPcode<=instruction[15 down to 11];
+R1<=instruction[10 down to 8];
+R1<=instruction[7 down to 5];
+LDD_Memory<=instruction[15 down to 6];
+LDM_immediate<=instruction[15 down to 0];
+
+
+
+My_Control: control port map (OPcode,enable_LoadStore,fake1,fake2,fake3,fake4,fake5,fake6,fake7,fake8,fake9,fake10,fake11,fake12,fake13,fake14,fake15,fake16,fake17,fake18,fake19,fake20,fake21);
+--My_REG: REG port map ()
+ 
+
+
+end architecture Decoder_Arch;

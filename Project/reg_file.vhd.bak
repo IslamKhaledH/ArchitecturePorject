@@ -4,24 +4,20 @@ Use ieee.std_logic_1164.all;
 Entity REG is
 	Generic ( n : integer := 16);
 		port( 
-				Clk,Rst : in std_logic;
+				Clock,Reset,en : in std_logic;
 				d : in std_logic_vector(n-1 downto 0);
 				q : out std_logic_vector(n-1 downto 0);
-				port1_data, port2_data : out std_logic_vector(15 downto 0);
-				w_en : in std_logic ;
-				w_sel,port1_sel,port2_sel : in std_logic_vector(2 downto 0);
+				R1_Out, R2_Out : out std_logic_vector(15 downto 0);
+				w_en : in std_logic ;--write enable
+				Rout,R1,R2 : in std_logic_vector(2 downto 0);--
 				
 				input_port : in std_logic_vector(15 downto 0);
 				wrt_data_reg_mux : in std_logic;
 				
-				stack_en : in std_logic_vector(1 downto 0);
-				stack_plus : in std_logic;
-				stack_minus : in std_logic;
-				stack_counter : in std_logic_vector(9 downto 0);
-				
-				load_value_15_0 : in std_logic_vector(15 downto 0)
-				
-			);
+				--------------------------------------------------------
+				Shift_Mux : in std_logic
+
+				);
 end REG;
 
 Architecture REG_arc of REG is
@@ -35,23 +31,24 @@ Architecture REG_arc of REG is
 	
 	signal d1,d2,d3,d4,d5,d6,d7,d8 : std_logic_vector(15 downto 0);
 	signal q1,q2,q3,q4,q5,q6,q7,q8 : std_logic_vector(15 downto 0);
-	signal stack_en_signa1,stack_plus_signal,stack_minus_signal,e4 : std_logic_vector(7 downto 0);
+	--signal stack_en_signa1,stack_plus_signal,stack_minus_signal,e4 : std_logic_vector(7 downto 0);
 	
 	
 begin
-		R1: nreg generic map (n=>16)port map(Clk,Rst,enable,d1,q1);
-		R2: nreg generic map (n=>16)port map(Clk,Rst,enable,d2,q2);
-		R3: nreg generic map (n=>16)port map(Clk,Rst,enable,d3,q3);
-		R4: nreg generic map (n=>16)port map(Clk,Rst,enable,d4,q4);
-		R5: nreg generic map (n=>16)port map(Clk,Rst,enable,d5,q5);
-		R6: nreg generic map (n=>16)port map(Clk,Rst,enable,d6,q6);
-		--R7: nreg port map (clk, RST, d7,q7);
+		R11: nreg generic map (n=>16)port map(Clock,Reset,'1',d1,q1);
+		R21: nreg generic map (n=>16)port map(Clock,Reset,'1',d2,q2);
+		R31: nreg generic map (n=>16)port map(Clock,Reset,'1',d3,q3);
+		R41: nreg generic map (n=>16)port map(Clock,Reset,'1',d4,q4);
+		R51: nreg generic map (n=>16)port map(Clock,Reset,'1',d5,q5);
+		R61: nreg generic map (n=>16)port map(Clock,Reset,'1',d6,q6);
 		
 		
 		
-Process(Clk,Rst,w_en,w_sel,Port1_sel,Port2_sel,d)
+		
+		
+Process(Clock,Reset,w_en,Rout,R1,R2,d,wrt_data_reg_mux,Shift_Mux,input_port)
 begin
-				if Rst = '1' then
+				if Reset = '1' then
 					d1 <= (others=>'0'); 
 					d2 <= (others=>'0'); 
 					d3 <= (others=>'0'); 
@@ -60,81 +57,86 @@ begin
 					d6 <= (others=>'0');
 					d7 <= (others=>'0');
 					d8 <= (others=>'0');
+				elsif  Reset = '0' then
 					
 					
-					
-				end if;
-
-				if w_en = '1' then
-					if wrt_data_reg_mux ='0' then
-						if w_sel = "000" then
-							d1 <= d;
-						elsif w_sel = "001" then
-							d2 <= d;
-						elsif w_sel = "010" then
-							d3 <= d;
-						elsif w_sel = "011" then
-							d4 <= d;
-						elsif w_sel = "100" then
-							d5 <=d;
-						elsif w_sel = "101"then
-							d6 <=d;
-						--elsif w_sel= "110" then
-							--d7 <=d;
-						end if;
-					elsif wrt_data_reg_mux ='1' then 
-						if w_sel = "000" then
-							d1 <= input_port;
-						elsif w_sel = "001" then
-							d2 <= input_port;
-						elsif w_sel = "010" then
-							d3 <= input_port;
-						elsif w_sel = "011" then
-							d4 <= input_port;
-						elsif w_sel = "100" then
-							d5 <= input_port;
-						elsif w_sel = "101"then
-							d6 <= input_port;
-						--elsif w_sel= "110" then
-							--d7 <=input_port;
-						end if;
-						
-						
-						
-					--elsif stack_en='01' then
-						--	d7 <= d;
-							
-					
-				--	elsif stack_en='10' then
-					--		 <= d7;
-							
-							
+					if w_en = '1' then
+							if wrt_data_reg_mux ='0' then
+										if Shift_Mux = '0' then 
+												if Rout = "000" then
+													d1 <= d;
+												elsif Rout = "001" then
+													d2 <= d;
+												elsif Rout = "010" then
+													d3 <= d;
+												elsif Rout = "011" then
+													d4 <= d;
+												elsif Rout = "100" then
+													d5 <=d;
+												elsif Rout = "101"then
+													d6 <=d;
+												end if;
+									
+										elsif Shift_Mux='1' then
+												if R1 = "000" then
+														d1 <= d;
+													elsif R1 = "001" then
+														d2 <= d;
+													elsif R1 = "010" then
+														d3 <= d;
+													elsif R1 = "011" then
+														d4 <= d;
+													elsif R1 = "100" then
+														d5 <=d;
+													elsif R1 = "101"then
+														d6 <=d;
+													end if;
+										end if;
+			
+							elsif wrt_data_reg_mux ='1' then 
+								if Rout = "000" then
+									d1 <= input_port;
+								elsif Rout = "001" then
+									d2 <= input_port;
+								elsif Rout = "010" then
+									d3 <= input_port;
+								elsif Rout = "011" then
+									d4 <= input_port;
+								elsif Rout = "100" then
+									d5 <= input_port;
+								elsif Rout = "101"then
+									d6 <= input_port;
+								end if;	
+							end if;
 					end if;
-				end if;
+				
 
-				if Port1_sel = "000" then Port1_data <= q1;
-				elsif Port1_sel = "001" then Port1_data <= q2;
-				elsif Port1_sel = "010" then Port1_data <= q3;
-				elsif Port1_sel = "011" then Port1_data <= q4;
-				elsif Port1_sel = "100" then Port1_data <= q5;
-				elsif Port1_sel = "101" then Port1_data <= q6;
-				--elsif Port1_sel = "110" then Port1_data <= q7;
-				
-				end if;
+							if R1 = "000" then R1_Out <= q1;
+							elsif R1 = "001" then R1_Out <= q2;
+							elsif R1 = "010" then R1_Out <= q3;
+							elsif R1 = "011" then R1_Out <= q4;
+							elsif R1 = "100" then R1_Out <= q5;
+							elsif R1 = "101" then R1_Out <= q6;
+							
+							
+							end if;
 
-				if Port2_sel = "000" then Port2_data <= q1;
-				elsif Port2_sel = "001" then Port2_data <= q2;
-				elsif Port2_sel = "010" then Port2_data <= q3;
-				elsif Port2_sel = "011" then Port2_data <=q4 ;
-				elsif Port1_sel = "100" then Port1_data <= q5;
-				elsif Port1_sel = "101" then Port1_data <= q6;
-				--elsif Port1_sel = "110" then Port1_data <= q7;
+							if R2 = "000" then R2_Out <= q1;
+							elsif R2 = "001" then R2_Out <= q2;
+							elsif R2 = "010" then R2_Out <= q3;
+							elsif R2 = "011" then R2_Out <=q4 ;
+							elsif R1 = "100" then R2_Out <= q5;
+							elsif R1 = "101" then R2_Out <= q6;
+					
+						    end if;
+			
+                end if;
 				
-				
-				end if;
 	end process;
 			
 	
 
 	
 end REG_arc;
+
+

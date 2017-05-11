@@ -6,7 +6,7 @@ use ieee.numeric_std.all;
 entity control_entity is
   port (
 			op_code: in std_logic_vector(4 downto 0);
-			--enable_LoadStore: out std_logic; --enable load or store instruction
+			enable_LoadStore: in std_logic; --enable load or store instruction
 
 			pc_mux : out std_logic_vector(1 downto 0);
 			pc_en : out std_logic; 
@@ -17,6 +17,7 @@ entity control_entity is
 			mem_read : out std_logic; 
 			mem_write : out std_logic; 
 			write_data_reg_mux : out std_logic; 
+			r1_load_mux : out std_logic;                 --deleted from desgin
 			r2_shift_mux : out std_logic;
 			r1_forward_mux : out std_logic;               --always 0 be 1 if only make forward so take signal from forward to mux to make it 1 
 			r2_forward_mux : out std_logic; 				--always 0 be 1 if only make forward so take signal from forward to mux to make it 1 
@@ -99,6 +100,6 @@ Architecture arch_control_entity of control_entity is
 							'0';
 --++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-enable_LoadStore<='1' when op_code="11011"  or  op_code= "11100"  or op_code="11101";--el mafrood trgo zero b3d one cycle 
+enable_LoadStore<='1' when op_code="11011"  or  op_code= "11100"  or op_code="11101";
 
 end arch_control_entity;

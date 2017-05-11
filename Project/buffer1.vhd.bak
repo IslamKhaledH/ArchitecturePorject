@@ -1,0 +1,54 @@
+
+library ieee;
+use ieee.std_logic_1164.all;
+
+
+entity Ext_Mem_Buffer is 
+	Generic ( n : integer := 16);
+		port(
+				Clk : in std_logic;
+				Rst : in std_logic;
+				enable : in std_logic;
+				--pc_mux : in std_logic_vector(1 downto 0);
+				inport_en_input : in std_logic_vector(15 downto 0); --??????????????
+				--PC_MUX_input : in std_logic_vector(1 downto 0);
+				instruction_input :in std_logic_vector(15 downto 0);
+				
+				
+				
+				inport_en_output : in std_logic_vector(15 downto 0); --??????????????
+				--PC_MUX_input : in std_logic_vector(1 downto 0);
+				instruction_output :in std_logic_vector(15 downto 0);
+				
+
+				);
+end Ext_Mem_Buffer;
+
+architecture arch_Ext_Mem_Buffer of Ext_Mem_Buffer is
+	component Regis is
+		port( 
+				Clk,Rst,enable : in std_logic;
+				d : in std_logic;
+				q : out std_logic
+			);
+		end component;
+
+	component nreg is
+	Generic ( n : integer := 16);
+		port( 
+				Clk,Rst,enable : in std_logic;
+				d : in std_logic_vector(n-1 downto 0);
+				q : out std_logic_vector(n-1 downto 0)
+			);
+	end component;
+
+
+	begin
+
+	inport_en_map :	 nreg generic map (n=>16)port map(Clk,Rst,'1',inport_en_input,inport_en_output);
+	instruction_map :	nreg generic map (n=>16)port map(Clk,Rst,'1',instruction_input,instruction_output);
+	
+	
+	
+
+end arch_Ext_Mem_Buffer; 
