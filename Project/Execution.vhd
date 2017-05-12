@@ -6,18 +6,20 @@ ENTITY Execution IS
 port(
 		Clk,Rst,enable : in std_logic;
 		OpCode : in  std_logic_vector(4 downto 0);
+		R1_Reg1,R2_Reg1,ROut_Alu1,ROut_Mem1: in std_logic_vector(2 downto 0);
+		--R1_address,R2_address: in std_logic_vector(2 downto 0);
 		R1_dec: in  std_logic_vector(15 downto 0);
 		R2_dec: in  std_logic_vector(15 downto 0);
 		n : in std_logic_vector (3 downto 0);
-		R1_Reg,R2_Reg,ROut_Alu,ROut_Mem: in std_logic_vector(2 downto 0);
-		Alu_Output , Meomry_Output: in std_logic_vector(15 downto 0);
+		--R1_Reg,R2_Reg,ROut_Alu,ROut_Mem: in std_logic_vector(2 downto 0);
+		Alu_Output1 , Meomry_Output1: in std_logic_vector(15 downto 0);
 		
 		Execution_Output: out std_logic_vector(15 downto 0);
 		--WriteBackSignal : in std_logic;
-		Z: out std_logic;
-		NF: out std_logic;
-		v: out std_logic;
-		C: out std_logic
+		Z_F: out std_logic;
+		NF_F: out std_logic;
+		V_F: out std_logic;
+		C_F: out std_logic
 	);
 END Execution;
 
@@ -62,7 +64,7 @@ Architecture archi of Execution is
 
 	begin
 
-		forward_map: Forwarding port map(R1_Reg,R2_Reg,ROut_Alu,ROut_Mem,R1_Forward_out_signal,R2_Forward_out_signal,R1_Mux_signal,R2_Mux_signal,Alu_Output, Meomry_Output);
+		forward_map: Forwarding port map(R1_Reg1,R2_Reg1,ROut_Alu1,ROut_Mem1,R1_Forward_out_signal,R2_Forward_out_signal,R1_Mux_signal,R2_Mux_signal,Alu_Output1, Meomry_Output1);
 		Alu_map: ALU port map(Clk,Rst,enable,OpCode,R1_signal,R2_signal,Execution_Output_signal,n, Z_signal,NF_signal,V_signal,C_signal);
 
 
@@ -75,10 +77,10 @@ Architecture archi of Execution is
 				
 
 		Execution_Output <= Execution_Output_signal;
-		Z <= Z_signal;
-		NF <= NF_signal;
-		V <= V_signal;
-		C <= C_signal;
+		Z_F <= Z_signal;
+		NF_F <= NF_signal;
+		V_F <= V_signal;
+		C_F <= C_signal;
 
 
 end archi; 

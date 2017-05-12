@@ -22,7 +22,10 @@ entity Decode_Buffer is
 				
 				
 				OPcode_in: in std_logic_vector(4 downto 0 );
-							OPcode_out: out std_logic_vector(4 downto 0 )
+				OPcode_out: out std_logic_vector(4 downto 0 );
+				
+				R1_address_in,R2_address_in: in std_logic_vector(2 downto 0 );
+				R1_address_out,R2_address_out: out std_logic_vector(2 downto 0 )
 
 				
 				
@@ -45,6 +48,8 @@ architecture Decode_Buffer_arch of Decode_Buffer is
 					OPcode_out<=OPcode_in;
 				Rout_out<=Rout_in;
 				R_shift_out<=R_shift_in;
+				R1_address_out<=R1_address_in;
+				R2_address_out<=R2_address_in;
 				
 			
 			end if;
