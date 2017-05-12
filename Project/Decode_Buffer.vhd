@@ -18,10 +18,12 @@ entity Decode_Buffer is
 				Rout_out: out std_logic_vector(2 downto 0 ); --for write back
 			
 				R_shift_in:in std_logic_vector(3 downto 0 );
-				R_shift_out:out std_logic_vector(3 downto 0 )
+				R_shift_out:out std_logic_vector(3 downto 0 );
 				
 				
-			
+				OPcode_in: in std_logic_vector(4 downto 0 );
+							OPcode_out: out std_logic_vector(4 downto 0 )
+
 				
 				
 				);
@@ -40,7 +42,7 @@ architecture Decode_Buffer_arch of Decode_Buffer is
 				
 					R1_out<=R1_in;
 					R2_out<=R2_in;
-
+					OPcode_out<=OPcode_in;
 				Rout_out<=Rout_in;
 				R_shift_out<=R_shift_in;
 				

@@ -14,8 +14,9 @@ Entity REG is
 				wrt_data_reg_mux : in std_logic;
 				
 				--------------------------------------------------------
-				Shift_Mux : in std_logic--control unit
-
+				Shift_Mux : in std_logic;--control unit
+				OPcode_in: in std_logic_vector(4 downto 0 );
+				OPcode_out: out std_logic_vector(4 downto 0 )
 				);
 end REG;
 
@@ -47,7 +48,7 @@ begin
 		
 --WRITE BACK CLOCK NOT HANDELED		
 		
-Process(Clock,Reset,w_en,Rout,R1,R2,d,wrt_data_reg_mux,Shift_Mux,input_port)
+Process(Clock,Reset,w_en,Rout,R1,R2,d,wrt_data_reg_mux,Shift_Mux,input_port,OPcode_in)
 begin
 	
 				if Reset = '1' then
@@ -59,8 +60,10 @@ begin
 					d6 <= (others=>'0');
 	
 				elsif  Reset = '0' then
-					
+
 				if 	Clock='1' then 
+				OPcode_out<=OPcode_in;
+
 					if w_en = '1' then
 							if wrt_data_reg_mux ='0' then
 										if Shift_Mux = '0' then 
