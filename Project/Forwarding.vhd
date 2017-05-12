@@ -8,7 +8,7 @@ port(
 	R1,R2: out std_logic_vector(15 downto 0);
 	R1_Mux,R2_Mux : out std_logic;
 	Alu_Output , Meomry_Output: in std_logic_vector(15 downto 0);
-	WriteBackSignal : in std_logic
+	--WriteBackSignal : in std_logic
 	);
 END Forwarding;
 
