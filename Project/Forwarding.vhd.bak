@@ -2,30 +2,18 @@ Library ieee;
 Use ieee.std_logic_1164.all;
 use ieee.std_logic_signed.all;
 
-<<<<<<< HEAD
 ENTITY AddSubIncDec IS
-=======
-ENTITY Forwarding IS
->>>>>>> ac977cf3d0e475d0a2ed1692bc907efcaabe994c
 port(
 	R1_Reg,R2_Reg,ROut_Alu,ROut_Mem: in std_logic_vector(2 downto 0);
 	R1,R2: out std_logic_vector(15 downto 0);
 	R1_Mux,R2_Mux : out std_logic;
 	Alu_Output , Meomry_Output: in std_logic_vector(15 downto 0);
-<<<<<<< HEAD
 	--Alu_Output1 , Meomry_Output1: out std_logic_vector(15 downto 0);
 	--WriteBackSignal : in std_logic
 	);
 END AddSubIncDec;
 
 Architecture archi of AddSubIncDec is
-=======
-	--WriteBackSignal : in std_logic
-	);
-END Forwarding;
-
-Architecture archi of Forwarding is
->>>>>>> ac977cf3d0e475d0a2ed1692bc907efcaabe994c
 begin
 R1 <= 	Alu_Output when R1_Reg = ROut_Alu else
 		Meomry_Output when R1_Reg = ROut_Mem;
@@ -43,8 +31,4 @@ R2_Mux <= 	'1' when R2_Reg = ROut_Alu or R2_Reg = ROut_Mem else
 
 
 
-<<<<<<< HEAD
 end archi;
-=======
-end archi; 
->>>>>>> ac977cf3d0e475d0a2ed1692bc907efcaabe994c
