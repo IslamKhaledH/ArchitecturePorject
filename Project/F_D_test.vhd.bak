@@ -1,36 +1,48 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+use ieee.std_logic_signed.all;
 
 
 entity Ext_Mem_Buffer is 
-	Generic ( n : integer := 16);
 		port(
 				Clk : in std_logic;
 				Rst : in std_logic;
 				enable : in std_logic;
+				pc_mux_input : in std_logic_vector(1 downto 0);
+				op_code_input: in std_logic_vector(4 downto 0);
+				mem_mux_input : in std_logic;                              --mickey mux
+				R1_regfile_input: in std_logic_vector(15 downto 0);
+				ALU_address_input,stack_address_input : in std_logic_vector(9 downto 0);
+				ALU_out_input : in std_logic_vector(15 downto 0);
+				Z_input: in std_logic;
+				NF_input: in std_logic;
+				V_input: in std_logic;
+				C_input: in std_logic;
+				outport_en_input : in std_logic; 
+				 
+				reg_write_input : in std_logic;
+				mem_write_input : in std_logic; 
+				write_data_reg_mux_input : in std_logic; 
+				write_back_mux_input : in std_logic_vector(1 downto 0);
+				load_store_address_input : in std_logic_vector(15 downto 0);  --LDM
+--------------------------------------------------------------------------------------------------------------------
+				pc_mux_output : out std_logic_vector(1 downto 0);
+				op_code_output: out std_logic_vector(4 downto 0);
+				mem_mux_output : out std_logic;                              --mickey mux
+				R1_regfile_output: out std_logic_vector(15 downto 0);
+				ALU_address_output,stack_address_output : out std_logic_vector(9 downto 0);
+				ALU_out_output : out std_logic_vector(15 downto 0);
+				Z_output: out std_logic;
+				NF_output: out std_logic;
+				V_output: out std_logic;
+				C_output: out std_logic;
 				
-				inport_en_input : in std_logic_vector(15 downto 0); --??????????????
-				
-				instruction_input :in std_logic_vector(15 downto 0);
-				
-				
-				
-				inport_en_output : out std_logic_vector(15 downto 0); --??????????????
-				
-				instruction_output :out std_logic_vector(15 downto 0);
-				
-				
-				
-				--OPcode: out std_logic_vector(4 downto 0 ); 
-				--R1: out std_logic_vector(2 downto 0 ); --addres of reg1
-				--R2: out std_logic_vector(2 downto 0 ); --addres of reg2
-				--Rout: out std_logic_vector(2 downto 0 ); --for write back
-				--LDD_Memory: out std_logic_vector(9 downto 0 ); --load value from memory to register
-				--LDM_immediate: out std_logic_vector(15 downto 0 ); --load immediate value from user to register
-				input_port : in std_logic_vector(15 downto 0 )
-				
-				
+				outport_en_output : out std_logic; 
+				reg_write_output : out std_logic;
+				mem_write_output : out std_logic; 
+				write_data_reg_mux_output : out std_logic; 
+				write_back_mux_output: out std_logic_vector(1 downto 0);
+				load_store_address_output : out std_logic_vector(15 downto 0)
 				);
 end Ext_Mem_Buffer;
 
@@ -51,71 +63,30 @@ architecture arch_Ext_Mem_Buffer of Ext_Mem_Buffer is
 				q : out std_logic_vector(n-1 downto 0)
 			);
 	end component;
-	
-   
-	signal input_port_signal : std_logic_vector(15 downto 0);
-	signal LDD_Memory_signal :  std_logic_vector(9 downto 0 ); --load value from memory to register
-	signal LDM_immediate_signal :  std_logic_vector(15 downto 0 ); --load value from memory to register
-	signal LDD_Memory_signal_output :  std_logic_vector(9 downto 0 ); --load value from memory to register
-	signal LDM_immediate_signal_output :  std_logic_vector(15 downto 0 ); --load value from memory to register
-	signal OPcode: std_logic_vector(4 downto 0 ); 
-	signal OPcode_nop: std_logic_vector(4 downto 0 ); 
-	signal R1: std_logic_vector(2 downto 0 ); --addres of reg1
-	signal R2:  std_logic_vector(2 downto 0 ); --addres of reg2
-	signal Rout: std_logic_vector(2 downto 0 ); --for write back
-	signal en_signal: std_logic;
-	
-	
+
 
 	begin
-	
-		
 				
-		
-		
+		pc_mux_map : 				nreg generic map (n=>2)port map(Clk,Rst,enable,pc_mux_input,pc_mux_output);
+		op_code_map :				nreg generic map (n=>5)port map(Clk,Rst,enable,op_code_input,op_code_output);
+		mem_mux_map :		 		Regis port map(Clk,Rst,enable,mem_mux_input,mem_mux_output);
+		R1_regfile_map : 			nreg generic map (n=>16)port map(Clk,Rst,enable,R1_regfile_input,R1_regfile_output);
+		ALU_address_map : 			nreg generic map (n=>10)port map(Clk,Rst,enable,ALU_address_input,ALU_address_output);
+		ALU_out_map : 				nreg generic map (n=>16)port map(Clk,Rst,enable,ALU_out_input,ALU_out_output);
+		Z_map :		 				Regis port map(Clk,Rst,enable,Z_input,Z_output);
+		NF_map :		 			Regis port map(Clk,Rst,enable,NF_input,NF_output);
+		V_map :		 				Regis port map(Clk,Rst,enable,V_input,V_output);
+		C_map :		 				Regis port map(Clk,Rst,enable,C_input,C_output);
+		outport_en_map :	 		Regis port map(Clk,Rst,enable,outport_en_input,outport_en_output);
+		reg_write_map : 			Regis port map(Clk,Rst,enable,reg_write_output,reg_write_output);
+		mem_write_map : 			Regis port map(Clk,Rst,enable,mem_write_input,mem_write_output);
+		write_data_reg_mux_map : 	Regis port map(Clk,Rst,enable,write_data_reg_mux_input,write_data_reg_mux_output);
+		write_back_mux_map : 		nreg generic map (n=>16)port map(Clk,Rst,enable,write_back_mux_input,write_back_mux_output);
+		load_store_address_map : 	nreg generic map (n=>16)port map(Clk,Rst,enable,load_store_address_input,load_store_address_output);
+	
+	
+	
+	
 
-		inport_en_map :	 nreg generic map (n=>16)port map(Clk,Rst,en_signal,inport_en_input,inport_en_output);
-		instruction_map :	nreg generic map (n=>16)port map(Clk,Rst,en_signal,instruction_input,instruction_output);
-		
-		op_code_map :	nreg generic map (n=>5)port map(Clk,Rst,en_signal,instruction_input(15 downto 11),OPcode);
-		R1_map :	nreg generic map (n=>3)port map(Clk,Rst,en_signal,instruction_input(10 downto 8),R1);
-		R2_map :	nreg generic map (n=>3)port map(Clk,Rst,en_signal,instruction_input(7 downto 5),R2);
-		Rout_map :	nreg generic map (n=>3)port map(Clk,Rst,en_signal,instruction_input(4 downto 2),Rout);
-		
-		LDM_map :	nreg generic map (n=>16)port map(Clk,Rst,en_signal,LDM_immediate_signal,LDM_immediate_signal_output);
-		LDD_map :	nreg generic map (n=>10)port map(Clk,Rst,en_signal,LDD_Memory_signal,LDD_Memory_signal_output);
-		
-		
-		
-		
-		--OPcode<=instruction_input[15 down to 11];
-		--R1 <=instruction_input[10 down to 8];
-		--R2 <=instruction_input[7 down to 5];
-	--	Rout <= instruction_input[4 downto 2];
+end arch_Ext_Mem_Buffer; 
 
-
-		--input_port_signal <= input_port;
-		
-		
-		process(clk) is
-		begin
-			if rising_edge(clk) or falling_edge(clk) and instruction_input(15 downto 11)="11011" then
-				OPcode_nop <= "00000";
-				en_signal <='0';
-				LDM_immediate_signal<=instruction_input(15 downto 0);
-			elsif rising_edge(clk) or falling_edge(clk) and (instruction_input(15 downto 11)>="11100" and instruction_input(15 downto 11)<="11101") then
-				OPcode_nop <= "00000";
-				en_signal <='0';
-				LDD_Memory_signal<=instruction_input(15 downto 6);
-			else
-				en_signal <='1';
-			end if;
-
-	end process;
-		
-		
-		
-
-		
-
-end arch_Ext_Mem_Buffer;

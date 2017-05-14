@@ -1,30 +1,34 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+use ieee.std_logic_signed.all;
 
 
 entity Mem_WB_Buffer is 
-	Generic ( n : integer := 16);
 		port(
 				Clk : in std_logic;
 				Rst : in std_logic;
 				enable : in std_logic;
-				
-				--Input
 				pc_mux_input : in std_logic_vector(1 downto 0);
+				
+				
 				outport_en_input : in std_logic; 
-				reg_write_input : in std_logic; 
+				 
+				reg_write_input : in std_logic;
+				
 				write_data_reg_mux_input : in std_logic; 
-				write_back_mux_input : in std_logic_vector(1 downto 0);				
-				flags_en_input : in std_logic; 
-
-				--Output
+				write_back_mux_input : in std_logic_vector(1 downto 0);
+				LDM_immediate_input : in std_logic_vector(15 downto 0);
+--------------------------------------------------------------------------------------------------------------------
 				pc_mux_output : out std_logic_vector(1 downto 0);
+				
+				
 				outport_en_output : out std_logic; 
-				reg_write_output : out std_logic; 
+				reg_write_output : out std_logic;
+				
 				write_data_reg_mux_output : out std_logic; 
-				write_back_mux_output : out std_logic_vector(1 downto 0);				
-				flags_en_output : out std_logic
+				write_back_mux_output: out std_logic_vector(1 downto 0);
+				LDM_immediate_output : out std_logic_vector(15 downto 0)
+				
 				);
 end Mem_WB_Buffer;
 
@@ -46,16 +50,22 @@ architecture arch_Mem_WB_Buffer of Mem_WB_Buffer is
 			);
 	end component;
 
-	
-	begin
 
-	pc_mux_map : nreg generic map (n=>2)port map(Clk,Rst,enable,pc_mux_input,pc_mux_output);
-	outport_en_map : Regis port map(Clk,Rst,enable,outport_en_input,outport_en_output);
-	reg_write_map : Regis port map(Clk,Rst,enable,reg_write_input,reg_write_output);
-	write_data_reg_mux_map : Regis port map(Clk,Rst,enable,write_data_reg_mux_input,write_data_reg_mux_output); 
-	write_back_mux_map : nreg generic map (n=>1)port map(Clk,Rst,enable,write_back_mux_input,write_back_mux_output);			
-	flags_en_map : Regis port map(Clk,Rst,enable,flags_en_input,flags_en_output);
+	begin
+				
+		pc_mux_map : 				nreg generic map (n=>2)port map(Clk,Rst,enable,pc_mux_input,pc_mux_output);
+		
+		outport_en_map :	 		Regis port map(Clk,Rst,enable,outport_en_input,outport_en_output);
+		reg_write_map : 			Regis port map(Clk,Rst,enable,reg_write_input,reg_write_output);
+		
+		write_data_reg_mux_map : 	Regis port map(Clk,Rst,enable,write_data_reg_mux_input,write_data_reg_mux_output);
+		write_back_mux_map : 		nreg generic map (n=>16)port map(Clk,Rst,enable,write_back_mux_input,write_back_mux_output);
+		LDM_immediate_map : 	nreg generic map (n=>16)port map(Clk,Rst,enable,LDM_immediate_input,LDM_immediate_output);
+		
+	
+	
 	
 	
 
 end arch_Mem_WB_Buffer; 
+

@@ -1,67 +1,52 @@
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.std_logic_signed.all;
 
 
 entity Ext_Mem_Buffer is 
-	Generic ( n : integer := 16);
 		port(
 				Clk : in std_logic;
 				Rst : in std_logic;
 				enable : in std_logic;
-				--pc_mux : in std_logic_vector(1 downto 0);
+				pc_mux_input : in std_logic_vector(1 downto 0);
+				op_code_input: in std_logic_vector(4 downto 0);
+				mem_mux_input : in std_logic;                              --mickey mux
+				R1_regfile_input: in std_logic_vector(15 downto 0);
+				--ALU_address_input : in std_logic_vector(9 downto 0);
+				--stack_address_input : in std_logic_vector(9 downto 0);
+				--ALU_address_input,stack_address_input : in std_logic_vector(9 downto 0);
+				ALU_out_input : in std_logic_vector(15 downto 0);
+				Z_input: in std_logic;
+				NF_input: in std_logic;
+				V_input: in std_logic;
+				C_input: in std_logic;
 				outport_en_input : in std_logic; 
-				reg_write_input : in std_logic; 
-				mem_read_input : in std_logic; 
+				 
+				reg_write_input : in std_logic;
 				mem_write_input : in std_logic; 
 				write_data_reg_mux_input : in std_logic; 
-				--r1_load_mux : in std_logic;                 --deleted from desgin
-				--r2_shift_mux_input : in std_logic;
-				--r1_forward_mux_input : in std_logic;               --always 0 be 1 if only make forward so take signal from forward to mux to make it 1 
-				--r2_forward_mux_input : in std_logic; 				--always 0 be 1 if only make forward so take signal from forward to mux to make it 1 
-				--write_reg_mux_input : in std_logic;  
 				write_back_mux_input : in std_logic_vector(1 downto 0);
+				LDM_immediate_input : in std_logic_vector(15 downto 0);
+				load_store_address_input : in std_logic_vector(9 downto 0);  --LDD
+--------------------------------------------------------------------------------------------------------------------
+				pc_mux_output : out std_logic_vector(1 downto 0);
+				op_code_output: out std_logic_vector(4 downto 0);
+				mem_mux_output : out std_logic;                              --mickey mux
+				--R1_regfile_output: out std_logic_vector(15 downto 0);
+				ALU_address_output,stack_address_output : out std_logic_vector(9 downto 0);
+				ALU_out_output : out std_logic_vector(15 downto 0);
+				Z_output: out std_logic;
+				NF_output: out std_logic;
+				V_output: out std_logic;
+				C_output: out std_logic;
 				
-				--flags_en_input : in std_logic; 
-				flags_rti_en_input : in std_logic; 
-				--alu_control_input : in std_logic;                 --change it according to alu control (3 bit ****)علي حسب شغلك   'musgi'
-				mem_mux_input : in std_logic;  
-				--stack_plus : in std_logic;  
-				--stack_minus : in std_logic;  
-				--stack_en : in std_logic_vector(1 downto 0);
-				
-				--load_value_15_0 : in std_logic_vector(15 downto 0); --jump from fetch to ext (without decode)
-				load_store_address_input : in std_logic_vector(15 downto 0);
-				
-				--n : in std_logic 
-				
-				
-				
-				--pc_mux : out std_logic_vector(1 downto 0);
 				outport_en_output : out std_logic; 
-				reg_write_output : out std_logic; 
-				mem_read_output : out std_logic; 
+				reg_write_output : out std_logic;
 				mem_write_output : out std_logic; 
 				write_data_reg_mux_output : out std_logic; 
-				--r1_load_mux : out std_logic;                 --deleted from desgin
-				--r2_shift_mux_output : out std_logic;
-				--r1_forward_mux_output : out std_logic;               --always 0 be 1 if only make forward so take signal from forward to mux to make it 1 
-				--r2_forward_mux_output : out std_logic; 				--always 0 be 1 if only make forward so take signal from forward to mux to make it 1 
-				--write_reg_mux_output : out std_logic;  
 				write_back_mux_output: out std_logic_vector(1 downto 0);
-				
-				--flags_en_output : out std_logic; 
-				flags_rti_en_output : out std_logic; 
-				--alu_control_output : out std_logic;                 --change it according to alu control (3 bit ****)علي حسب شغلك   'musgi'
-				mem_mux_output : out std_logic;  
-				--stack_plus : out std_logic;  
-				--stack_minus : out std_logic;  
-				--stack_en : out std_logic_vector(1 downto 0);
-				
-				--load_value_15_0 : in std_logic_vector(15 downto 0); --jump from fetch to ext (without decode)
-				load_store_address_output : out std_logic_vector(15 downto 0)
-				
-				--n : in std_logic 
-
+				LDM_immediate_output : out std_logic_vector(15 downto 0);
+				load_store_address_output : out std_logic_vector(9 downto 0)
 				);
 end Ext_Mem_Buffer;
 
@@ -85,22 +70,25 @@ architecture arch_Ext_Mem_Buffer of Ext_Mem_Buffer is
 
 
 	begin
-
-	outport_en_map :	 		Regis port map(Clk,Rst,enable,outport_en_input,outport_en_output);
-	--reg_write_map : 			Regis port map(Clk,Rst,enable,reg_write_input,reg_write_output);
-	mem_read_map : 				Regis port map(Clk,Rst,enable,mem_read_input,mem_read_output);
-	mem_write_map : 			Regis port map(Clk,Rst,enable,mem_write_input,mem_write_output);
-	write_data_reg_mux_map : 	Regis port map(Clk,Rst,enable,write_data_reg_mux_input,write_data_reg_mux_output);
-	--r2_shift_mux_map : 			Regis port map(Clk,Rst,enable,r2_shift_mux_input,r2_shift_mux_output);
-	--r1_forward_mux_map : 		Regis port map(Clk,Rst,enable,r1_forward_mux_input,r1_forward_mux_output);
-	--r2_forward_mux_map :		 Regis port map(Clk,Rst,enable,r2_forward_mux_input,r2_forward_mux_output);
-	--write_reg_mux_map : 		Regis port map(Clk,Rst,enable,write_reg_mux_input,write_reg_mux_output);
-	write_back_mux_map : 		nreg generic map (n=>16)port map(Clk,Rst,enable,write_back_mux_input,write_back_mux_output);
-	--flags_en_map : 				Regis port map(Clk,Rst,enable,flags_en_input,flags_en_output);
-	flags_rti_en_map : 			Regis port map(Clk,Rst,enable,flags_rti_en_input,flags_rti_en_output);
-	--alu_control_map : 			Regis port map(Clk,Rst,enable,alu_control_input,alu_control_output);
-	mem_mux_map : 				Regis port map(Clk,Rst,enable,mem_mux_input,mem_mux_output);
-	load_store_address_map : 	nreg generic map (n=>16)port map(Clk,Rst,enable,load_store_address_input,load_store_address_output);
+				
+		pc_mux_map : 				nreg generic map (n=>2)port map(Clk,Rst,enable,pc_mux_input,pc_mux_output);
+		op_code_map :				nreg generic map (n=>5)port map(Clk,Rst,enable,op_code_input,op_code_output);
+		mem_mux_map :		 		Regis port map(Clk,Rst,enable,mem_mux_input,mem_mux_output);
+		R1_regfile_map : 			nreg generic map (n=>16)port map(Clk,Rst,enable,R1_regfile_input,R1_regfile_output);
+		ALU_address_map : 			nreg generic map (n=>10)port map(Clk,Rst,enable,ALU_address_input,ALU_address_output);
+		ALU_out_map : 				nreg generic map (n=>16)port map(Clk,Rst,enable,ALU_out_input,ALU_out_output);
+		Z_map :		 				Regis port map(Clk,Rst,enable,Z_input,Z_output);
+		NF_map :		 			Regis port map(Clk,Rst,enable,NF_input,NF_output);
+		V_map :		 				Regis port map(Clk,Rst,enable,V_input,V_output);
+		C_map :		 				Regis port map(Clk,Rst,enable,C_input,C_output);
+		outport_en_map :	 		Regis port map(Clk,Rst,enable,outport_en_input,outport_en_output);
+		reg_write_map : 			Regis port map(Clk,Rst,enable,reg_write_input,reg_write_output);
+		mem_write_map : 			Regis port map(Clk,Rst,enable,mem_write_input,mem_write_output);
+		write_data_reg_mux_map : 	Regis port map(Clk,Rst,enable,write_data_reg_mux_input,write_data_reg_mux_output);
+		write_back_mux_map : 		nreg generic map (n=>16)port map(Clk,Rst,enable,write_back_mux_input,write_back_mux_output);
+		--LDM_immediate_output <= LDM_immediate_input;
+		LDM_immediate_map : 	nreg generic map (n=>16)port map(Clk,Rst,enable,LDM_immediate_input,LDM_immediate_output);
+		load_store_address_map : 	nreg generic map (n=>10)port map(Clk,Rst,enable,load_store_address_input,load_store_address_output);
 	
 	
 	
