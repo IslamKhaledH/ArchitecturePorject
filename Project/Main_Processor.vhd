@@ -121,64 +121,9 @@ end  component;
 		end component;
 		
 ------------------------------------------------------------------------------------------------------------------------------------
-<<<<<<< HEAD
 		
 		
 		
-=======
-		component Execution IS
-			port(
-					Clk,Rst,enable : in std_logic;
-					OpCode : in  std_logic_vector(4 downto 0);
-					R1_Reg1,R2_Reg1,ROut_Alu1,ROut_Mem1: in std_logic_vector(2 downto 0);
-					
-					R1_dec: in  std_logic_vector(15 downto 0);
-					R2_dec: in  std_logic_vector(15 downto 0);
-					n : in std_logic_vector (3 downto 0);
-					
-					Alu_Output_exe , Meomry_Output_exe: in std_logic_vector(15 downto 0);
-					
-					Execution_Output: out std_logic_vector(15 downto 0);
-					
-					Z_F: out std_logic;
-					NF_F: out std_logic;
-					V_F: out std_logic;
-					C_F: out std_logic
-			);
-		end component;
-		
-		
-		
-------------------------------------------------------------------------------------------------------------------------------------	
-		component ALU is
-	  port (
-		Clk,Rst,enable : in std_logic;
-		OpCode : in  std_logic_vector(4 downto 0);
-		R1: in  std_logic_vector(15 downto 0);
-		R2: in  std_logic_vector(15 downto 0);
-		Output: out std_logic_vector(15 downto 0);
-		n : in std_logic_vector (3 downto 0);
-		Z: out std_logic;
-		NF: out std_logic;
-		v: out std_logic;
-		C: out std_logic
-		);
-	end  component;
-
----------------------------------------------------------------------------------------------------------------------------
-
-		component Forwarding IS
-	port(
-			R1_Reg,R2_Reg,ROut_Alu,ROut_Mem: in std_logic_vector(2 downto 0);
-			R1,R2: out std_logic_vector(15 downto 0);
-			R1_Mux,R2_Mux : out std_logic;
-			Alu_Output , Meomry_Output: in std_logic_vector(15 downto 0)
-			
-		
-		);
-	END component;
-		
->>>>>>> 23b04e029aedb71330f668040f9a841bdb73d0db
 		
 		
 		
@@ -277,48 +222,6 @@ component Ext_Mem_Buffer is
 				write_back_mux_output: out std_logic_vector(1 downto 0);
 				LDM_immediate_output : out std_logic_vector(15 downto 0);
 				load_store_address_output : out std_logic_vector(9 downto 0)
-				);
-end component;
-----------------------------------------------------------------------------------------------------------
-component Ext_Mem_Buffer is 
-		port(
-				Clk : in std_logic;
-				Rst : in std_logic;
-				enable : in std_logic;
-				pc_mux_input : in std_logic_vector(1 downto 0);
-				op_code_input: in std_logic_vector(4 downto 0);
-				mem_mux_input : in std_logic;                              --mickey mux
-				R1_regfile_input: in std_logic_vector(15 downto 0);
-				ALU_address_input,stack_address_input : in std_logic_vector(9 downto 0);
-				ALU_out_input : in std_logic_vector(15 downto 0);
-				Z_input: in std_logic;
-				NF_input: in std_logic;
-				V_input: in std_logic;
-				C_input: in std_logic;
-				outport_en_input : in std_logic; 
-				 
-				mem_write_input : in std_logic; 
-				write_data_reg_mux_input : in std_logic; 
-				write_back_mux_input : in std_logic_vector(1 downto 0);
-				load_store_address_input : in std_logic_vector(15 downto 0);  --LDM
---------------------------------------------------------------------------------------------------------------------
-				pc_mux_output : out std_logic_vector(1 downto 0);
-				op_code_output: out std_logic_vector(4 downto 0);
-				mem_mux_output : out std_logic;                              --mickey mux
-				R1_regfile_output: out std_logic_vector(15 downto 0);
-				ALU_address_output,stack_address_output : out std_logic_vector(9 downto 0);
-				ALU_out_output : out std_logic_vector(15 downto 0);
-				Z_output: out std_logic;
-				NF_output: out std_logic;
-				V_output: out std_logic;
-				C_output: out std_logic;
-				
-				outport_en_output : out std_logic; 
-				
-				mem_write_output : out std_logic; 
-				write_data_reg_mux_output : out std_logic; 
-				write_back_mux_output: out std_logic_vector(1 downto 0);
-				load_store_address_output : out std_logic_vector(15 downto 0)
 				);
 end component;
 
@@ -603,14 +506,9 @@ END component;
 	control_map : control_entity port map(OPcode_signal1,nop_enable_signal,pc_mux_signal,inport_en_signal,outport_en_signal,reg_write_signal,mem_write_signal,write_data_reg_mux_signal,Shift_Mux_signal,write_back_mux_signal,int_flags_en_signal,alu_control_signal,mem_mux_signal);
 	Buffer2 : Decode_Buffer port map(CLK,RESET,R1_Out_signal,R2_Out_signal,Rout_signal,R1_out_signal1,R2_out_signal1,Rout_out_signal1,R_shift_signal,R_shift_out_signal,OPcode_signal1,OPcode_signal2,R1_signal,R2_signal,R1_signal2,R2_signal2,pc_mux_signal,outport_en_signal,reg_write_signal,mem_write_signal,write_data_reg_mux_signal,write_back_mux_signal,int_flags_en_signal,alu_control_signal,mem_mux_signal,pc_mux_signal1,outport_en_signal1,reg_write_signal1,mem_write_signal1,write_data_reg_mux_signal1,write_back_mux_signal1,int_flags_en_signal1,alu_control_signal1,mem_mux_signal1);	
 	--ALU1: ALU port map(CLK,RESET,'1',OPcode_signal2,R1_out_signal1,R2_out_signal1,Output_signal, R_shift_out_signal,ZF_signal,N_signal,v_signal,C_signal);	
-<<<<<<< HEAD
 	Execute_map : Execution port map(CLK,RESET,enable,OPcode_signal2,R1_signal2,R2_signal2,ROut_Alu_signal,ROut_Mem_signal,R1_out_signal1,R2_Out_signal,R_shift_out_signal,Alu_dataout_signal,Mem_dataout_signal,Execution_Output_signal,Z_signal,NF_signal,v_signal,C_signal);
 	Buffer3 : Ext_Mem_Buffer port map(CLK,RESET,enable,pc_mux_signal1,OPcode_signa2,mem_mux_signal1,R1_out_signal1,Execution_Output_signal,Z_signal,NF_signal,v_signal,C_signal,outport_en_signal1,reg_write_signal1,mem_write_signal1,write_data_reg_mux_signal1,write_back_mux_signal1,LDM_immediate_signal,LDD_Memory_signal,pc_mux_signal2,OPcode_signal3,mem_mux_signal2,Execution_Output_signal1,Z_signal1,NF_signal1,v_signal1,C_signal1,outport_en_signal2,reg_write_signal2,mem_write_signal2,write_data_reg_mux_signal2,write_back_mux_signal2,LDM_immediate_signal1,LDD_Memory_signal1);
 	Meomrey_map : Memory port map();
-=======
-	Execute : Execution port map(CLK,RESET,enable,OPcode_signal2,R1_signal2,R2_signal2,ROut_Alu_signal,ROut_Mem_signal,R1_out_signal1,R2_Out_signal,R_shift_out_signal,Alu_dataout_signal,Mem_dataout_signal,Execution_Output_signal,Z_signal,NF_signal,v_signal,C_signal);
-	
->>>>>>> 23b04e029aedb71330f668040f9a841bdb73d0db
 	--  Buffer3:
 --  Memory:
 --	Buffer4:
