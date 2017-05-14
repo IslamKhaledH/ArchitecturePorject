@@ -12,9 +12,13 @@ entity Ext_Mem_Buffer is
 				op_code_input: in std_logic_vector(4 downto 0);
 				mem_mux_input : in std_logic;                              --mickey mux
 				R1_regfile_input: in std_logic_vector(15 downto 0);
+<<<<<<< HEAD
 				--ALU_address_input : in std_logic_vector(9 downto 0);
 				--stack_address_input : in std_logic_vector(9 downto 0);
 				--ALU_address_input,stack_address_input : in std_logic_vector(9 downto 0);
+=======
+				ALU_address_input,stack_address_input : in std_logic_vector(9 downto 0);
+>>>>>>> 23b04e029aedb71330f668040f9a841bdb73d0db
 				ALU_out_input : in std_logic_vector(15 downto 0);
 				Z_input: in std_logic;
 				NF_input: in std_logic;
@@ -22,17 +26,28 @@ entity Ext_Mem_Buffer is
 				C_input: in std_logic;
 				outport_en_input : in std_logic; 
 				 
+<<<<<<< HEAD
 				reg_write_input : in std_logic;
 				mem_write_input : in std_logic; 
 				write_data_reg_mux_input : in std_logic; 
 				write_back_mux_input : in std_logic_vector(1 downto 0);
 				LDM_immediate_input : in std_logic_vector(15 downto 0);
 				load_store_address_input : in std_logic_vector(9 downto 0);  --LDD
+=======
+				mem_write_input : in std_logic; 
+				write_data_reg_mux_input : in std_logic; 
+				write_back_mux_input : in std_logic_vector(1 downto 0);
+				load_store_address_input : in std_logic_vector(15 downto 0);  --LDM
+>>>>>>> 23b04e029aedb71330f668040f9a841bdb73d0db
 --------------------------------------------------------------------------------------------------------------------
 				pc_mux_output : out std_logic_vector(1 downto 0);
 				op_code_output: out std_logic_vector(4 downto 0);
 				mem_mux_output : out std_logic;                              --mickey mux
+<<<<<<< HEAD
 				--R1_regfile_output: out std_logic_vector(15 downto 0);
+=======
+				R1_regfile_output: out std_logic_vector(15 downto 0);
+>>>>>>> 23b04e029aedb71330f668040f9a841bdb73d0db
 				ALU_address_output,stack_address_output : out std_logic_vector(9 downto 0);
 				ALU_out_output : out std_logic_vector(15 downto 0);
 				Z_output: out std_logic;
@@ -41,12 +56,20 @@ entity Ext_Mem_Buffer is
 				C_output: out std_logic;
 				
 				outport_en_output : out std_logic; 
+<<<<<<< HEAD
 				reg_write_output : out std_logic;
 				mem_write_output : out std_logic; 
 				write_data_reg_mux_output : out std_logic; 
 				write_back_mux_output: out std_logic_vector(1 downto 0);
 				LDM_immediate_output : out std_logic_vector(15 downto 0);
 				load_store_address_output : out std_logic_vector(9 downto 0)
+=======
+				
+				mem_write_output : out std_logic; 
+				write_data_reg_mux_output : out std_logic; 
+				write_back_mux_output: out std_logic_vector(1 downto 0);
+				load_store_address_output : out std_logic_vector(15 downto 0)
+>>>>>>> 23b04e029aedb71330f668040f9a841bdb73d0db
 				);
 end Ext_Mem_Buffer;
 
@@ -82,6 +105,7 @@ architecture arch_Ext_Mem_Buffer of Ext_Mem_Buffer is
 		V_map :		 				Regis port map(Clk,Rst,enable,V_input,V_output);
 		C_map :		 				Regis port map(Clk,Rst,enable,C_input,C_output);
 		outport_en_map :	 		Regis port map(Clk,Rst,enable,outport_en_input,outport_en_output);
+<<<<<<< HEAD
 		reg_write_map : 			Regis port map(Clk,Rst,enable,reg_write_input,reg_write_output);
 		mem_write_map : 			Regis port map(Clk,Rst,enable,mem_write_input,mem_write_output);
 		write_data_reg_mux_map : 	Regis port map(Clk,Rst,enable,write_data_reg_mux_input,write_data_reg_mux_output);
@@ -89,6 +113,12 @@ architecture arch_Ext_Mem_Buffer of Ext_Mem_Buffer is
 		--LDM_immediate_output <= LDM_immediate_input;
 		LDM_immediate_map : 	nreg generic map (n=>16)port map(Clk,Rst,enable,LDM_immediate_input,LDM_immediate_output);
 		load_store_address_map : 	nreg generic map (n=>10)port map(Clk,Rst,enable,load_store_address_input,load_store_address_output);
+=======
+		mem_write_map : 			Regis port map(Clk,Rst,enable,mem_write_input,mem_write_output);
+		write_data_reg_mux_map : 	Regis port map(Clk,Rst,enable,write_data_reg_mux_input,write_data_reg_mux_output);
+		write_back_mux_map : 		nreg generic map (n=>16)port map(Clk,Rst,enable,write_back_mux_input,write_back_mux_output);
+		load_store_address_map : 	nreg generic map (n=>16)port map(Clk,Rst,enable,load_store_address_input,load_store_address_output);
+>>>>>>> 23b04e029aedb71330f668040f9a841bdb73d0db
 	
 	
 	
