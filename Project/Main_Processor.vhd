@@ -196,6 +196,7 @@ component Ext_Mem_Buffer is
 				R1_regfile_input: in std_logic_vector(15 downto 0);
 				--ALU_address_input : in std_logic_vector(9 downto 0);
 				--stack_address_input : in std_logic_vector(9 downto 0);
+				--ALU_address_input,stack_address_input : in std_logic_vector(9 downto 0);
 				ALU_out_input : in std_logic_vector(15 downto 0);
 				Z_input: in std_logic;
 				NF_input: in std_logic;
@@ -207,14 +208,14 @@ component Ext_Mem_Buffer is
 				mem_write_input : in std_logic; 
 				write_data_reg_mux_input : in std_logic; 
 				write_back_mux_input : in std_logic_vector(1 downto 0);
-				LDM_immediate_input : in std_logic_vector(15 downto 0);   --LDM
+				LDM_immediate_input : in std_logic_vector(15 downto 0);
 				load_store_address_input : in std_logic_vector(9 downto 0);  --LDD
 --------------------------------------------------------------------------------------------------------------------
 				pc_mux_output : out std_logic_vector(1 downto 0);
 				op_code_output: out std_logic_vector(4 downto 0);
 				mem_mux_output : out std_logic;                              --mickey mux
 				R1_regfile_output: out std_logic_vector(15 downto 0);
-				ALU_address_output,stack_address_output : out std_logic_vector(9 downto 0);
+				--ALU_address_output,stack_address_output : out std_logic_vector(9 downto 0);
 				ALU_out_output : out std_logic_vector(15 downto 0);
 				Z_output: out std_logic;
 				NF_output: out std_logic;
@@ -229,7 +230,11 @@ component Ext_Mem_Buffer is
 				LDM_immediate_output : out std_logic_vector(15 downto 0);
 				load_store_address_output : out std_logic_vector(9 downto 0);
 				Stack_WriteEnable_input1, StackPushPop_signal_input1 : in std_logic;
-				Stack_WriteEnable_output1, StackPushPop_output1 : out std_logic
+				Stack_WriteEnable_output1, StackPushPop_output1 : out std_logic;
+				R1_address_in2,R2_address_in2: in std_logic_vector(2 downto 0 );
+				R1_address_out2,R2_address_out2: out std_logic_vector(2 downto 0 );
+				Rout_in1: out std_logic_vector(2 downto 0 );
+				Rout_out1: out std_logic_vector(2 downto 0 )
 				
 				);
 end component;
@@ -259,7 +264,11 @@ component Mem_WB_Buffer is
 				
 				write_data_reg_mux_output : out std_logic; 
 				write_back_mux_output: out std_logic_vector(1 downto 0);
-				LDM_immediate_output : out std_logic_vector(15 downto 0)
+				LDM_immediate_output : out std_logic_vector(15 downto 0);
+				--R1_address_in3,R2_address_in3: in std_logic_vector(2 downto 0 );
+				--R1_address_out3,R2_address_out3: out std_logic_vector(2 downto 0 );
+				Rout_in2: out std_logic_vector(2 downto 0 );
+				Rout_out2: out std_logic_vector(2 downto 0 )
 				
 				);
 end component;
@@ -269,21 +278,21 @@ end component;
 component Execution IS
 			port(
 					Clk,Rst,enable : in std_logic;
-					OpCode : in  std_logic_vector(4 downto 0);
-					R1_Reg1,R2_Reg1,ROut_Alu1,ROut_Mem1: in std_logic_vector(2 downto 0);
-					
-					R1_dec: in  std_logic_vector(15 downto 0);
-					R2_dec: in  std_logic_vector(15 downto 0);
-					n : in std_logic_vector (3 downto 0);
-					
-					Alu_Output_exe , Meomry_Output_exe: in std_logic_vector(15 downto 0);
-					
-					Execution_Output: out std_logic_vector(15 downto 0);
-					
-					Z_F: out std_logic;
-					NF_F: out std_logic;
-					V_F: out std_logic;
-					C_F: out std_logic
+		OpCode : in  std_logic_vector(4 downto 0);
+		R1_Reg1,R2_Reg1,ROut_Alu1,ROut_Mem1: in std_logic_vector(2 downto 0);
+		
+		R1_dec: in  std_logic_vector(15 downto 0);
+		R2_dec: in  std_logic_vector(15 downto 0);
+		n : in std_logic_vector (3 downto 0);
+		
+		Alu_Output_exe , Meomry_Output_exe: in std_logic_vector(15 downto 0);
+		
+		Execution_Output: out std_logic_vector(15 downto 0);
+		
+		Z_F: out std_logic;
+		NF_F: out std_logic;
+		V_F: out std_logic;
+		C_F: out std_logic
 			);
 		end component;
 
@@ -490,14 +499,14 @@ END component;
 
 --Execution signals 
 	signal Output_signal: std_logic_vector(15 downto 0);
-	signal Z_signal:  std_logic;
-	signal NF_signal:  std_logic;
-	signal v_signal:  std_logic;
+	signal Z_signal: std_logic;
+	signal NF_signal: std_logic;
+	signal v_signal: std_logic;
 	signal C_signal: std_logic;
 	signal Execution_Output_signal : std_logic_vector(15 downto 0);
 	signal Meomrey_Output_signal : std_logic_vector(15 downto 0);
 	
-	signal OPcode_signal3:  std_logic_vector(4 downto 0 );
+	signal OPcode_signal3: std_logic_vector(4 downto 0 );
 	
 	
 	signal pc_mux_signal2 : std_logic_vector(1 downto 0);
@@ -506,9 +515,12 @@ END component;
 	signal reg_write_signal2 : std_logic;
 	
 	signal mem_write_signal2 : std_logic; 
-	signal write_data_reg_mux_signal2 :  std_logic; 
+	signal write_data_reg_mux_signal2 : std_logic; 
 	               
 	signal write_back_mux_signal2 :  std_logic_vector(1 downto 0);
+	
+	signal R1_out_signal3,R2_out_signal3: std_logic_vector(2 downto 0 );
+	signal R1_out_signal4,R2_out_signal4: std_logic_vector(2 downto 0 );
 	            
 	             
 	signal mem_mux_signal2 : std_logic;
@@ -521,6 +533,8 @@ END component;
 	signal Execution_Output_signal1 : std_logic_vector(15 downto 0);
 	signal Stack_WriteEnable_signal2, StackPushPop_signal2 : std_logic;
 	signal R1_out_signal2 : std_logic_vector(15 downto 0 );
+	signal R2_out_signal2 : std_logic_vector(15 downto 0 );
+	
 --Memory
 
 	signal Mem_dataout_signal,M0_signal,M1_signal : std_logic_vector(15 downto 0);
@@ -543,7 +557,11 @@ END component;
 	signal write_back_mux_signal3 :  std_logic_vector(1 downto 0);
 	signal	LDM_immediate_signal2:  std_logic_vector(15 downto 0 );
 
+------
 
+	signal Rout_signal1,Rout_signal2,Rout_signal3:  std_logic_vector(2 downto 0 );
+				
+------
 
  
 	begin
@@ -560,10 +578,10 @@ END component;
 	control_map : control_entity port map(OPcode_signal1,nop_enable_signal,pc_mux_signal,inport_en_signal,outport_en_signal,reg_write_signal,mem_write_signal,write_data_reg_mux_signal,Shift_Mux_signal,write_back_mux_signal,int_flags_en_signal,alu_control_signal,mem_mux_signal,Stack_WriteEnable_signal, StackPushPop_signal);
 	Buffer2 : Decode_Buffer port map(CLK,RESET,R1_Out_signal,R2_Out_signal,Rout_signal,R1_out_signal1,R2_out_signal1,Rout_out_signal1,R_shift_signal,R_shift_out_signal,OPcode_signal1,OPcode_signal2,R1_signal,R2_signal,R1_signal2,R2_signal2,pc_mux_signal,outport_en_signal,reg_write_signal,mem_write_signal,write_data_reg_mux_signal,write_back_mux_signal,int_flags_en_signal,alu_control_signal,mem_mux_signal,pc_mux_signal1,outport_en_signal1,reg_write_signal1,mem_write_signal1,write_data_reg_mux_signal1,write_back_mux_signal1,int_flags_en_signal1,alu_control_signal1,mem_mux_signal1,Stack_WriteEnable_signal, StackPushPop_signal,Stack_WriteEnable_signal1, StackPushPop_signal1);	
 	
-	Execute_map : Execution port map(CLK,RESET,enable,OPcode_signal2,R1_signal2,R2_signal2,reg_write_signal2,reg_write_signal3,R1_out_signal1,R2_Out_signal,R_shift_out_signal,Execution_Output_signal1,Mem_dataout_signal,Execution_Output_signal,Z_signal,NF_signal,v_signal,C_signal);
-	Buffer3 : Ext_Mem_Buffer port map(CLK,RESET,enable,pc_mux_signal1,OPcode_signal2,mem_mux_signal1,R1_out_signal1,Execution_Output_signal,Z_signal,NF_signal,v_signal,C_signal,outport_en_signal1,reg_write_signal1,mem_write_signal1,write_data_reg_mux_signal1,write_back_mux_signal1,LDM_immediate_signal,LDD_Memory_signal,pc_mux_signal2,OPcode_signal3,mem_mux_signal2,R1_out_signal2,Execution_Output_signal1,Z_signal1,NF_signal1,v_signal1,C_signal1,outport_en_signal2,reg_write_signal2,mem_write_signal2,write_data_reg_mux_signal2,write_back_mux_signal2,LDM_immediate_signal1,LDD_Memory_signal1,Stack_WriteEnable_signal1, StackPushPop_signal1,Stack_WriteEnable_signal2, StackPushPop_signal2);
-	Memory_map : Memory port map(CLK,RESET,mem_mux_signal2,mem_write_signal2,Stack_WriteEnable_signa2, StackPushPop_signa2,stackaddress"mickey"!!,LDD_Memory_signal1,Execution_Output_signal1,Mem_dataout_signal,M0_signal,M1_signal,Z_signal1,NF_signal1,v_signal1,C_signal1,Z_signal2,NF_signal2,v_signal2,C_signal2,OPcode_signal3,R1_out_signal2,Branch_out_signal)
-	Buffer4 : Mem_WB_Buffer port map(Clk,RESET,enable,pc_mux_signal2,outport_en_signal2,reg_write_signal2,write_data_reg_mux_signal2,write_back_mux_signal2,LDM_immediate_signal1,pc_mux_signal3,outport_en_signal3,reg_write_signal3,write_data_reg_mux_signal3,write_back_mux_signal3,LDM_immediate_signal2);
+	Execute_map : Execution port map(CLK,RESET,enable,OPcode_signal2,R1_signal2,R2_signal2,ROut_Alu_signal,ROut_Mem_signal,R1_out_signal1,R2_Out_signal,R_shift_out_signal,Execution_Output_signal1,Mem_dataout_signal,Execution_Output_signal,Z_signal,NF_signal,v_signal,C_signal);
+	Buffer3 : Ext_Mem_Buffer port map(CLK,RESET,enable,pc_mux_signal1,OPcode_signal2,mem_mux_signal1,R1_out_signal1,Execution_Output_signal,Z_signal,NF_signal,v_signal,C_signal,outport_en_signal1,reg_write_signal1,mem_write_signal1,write_data_reg_mux_signal1,write_back_mux_signal1,LDM_immediate_signal,LDD_Memory_signal,pc_mux_signal2,OPcode_signal3,mem_mux_signal2,R1_out_signal2,Execution_Output_signal1,Z_signal1,NF_signal1,v_signal1,C_signal1,outport_en_signal2,reg_write_signal2,mem_write_signal2,write_data_reg_mux_signal2,write_back_mux_signal2,LDM_immediate_signal1,LDD_Memory_signal1,Stack_WriteEnable_signal1, StackPushPop_signal1,Stack_WriteEnable_signal2, StackPushPop_signal2,R1_signal2,R2_signal2,R1_out_signal3,R2_out_signal3,Rout_signal,ROut_Alu_signal);
+	--Memory_map : Memory port map(CLK,RESET,mem_mux_signal2,mem_write_signal2,Stack_WriteEnable_signa2, StackPushPop_signa2,stackaddress"mickey"!!,LDD_Memory_signal1,Execution_Output_signal1,Mem_dataout_signal,M0_signal,M1_signal,Z_signal1,NF_signal1,v_signal1,C_signal1,Z_signal2,NF_signal2,v_signal2,C_signal2,OPcode_signal3,R1_out_signal2,Branch_out_signal)
+	Buffer4 : Mem_WB_Buffer port map(Clk,RESET,enable,pc_mux_signal2,outport_en_signal2,reg_write_signal2,write_data_reg_mux_signal2,write_back_mux_signal2,LDM_immediate_signal1,pc_mux_signal3,outport_en_signal3,reg_write_signal3,write_data_reg_mux_signal3,write_back_mux_signal3,LDM_immediate_signal2,Rout_signal1,ROut_Mem_signal);
 	
 	--  Buffer3:
 --  Memory:

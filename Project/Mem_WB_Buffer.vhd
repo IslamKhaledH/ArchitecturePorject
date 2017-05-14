@@ -27,7 +27,11 @@ entity Mem_WB_Buffer is
 				
 				write_data_reg_mux_output : out std_logic; 
 				write_back_mux_output: out std_logic_vector(1 downto 0);
-				LDM_immediate_output : out std_logic_vector(15 downto 0)
+				LDM_immediate_output : out std_logic_vector(15 downto 0);
+				--R1_address_in3,R2_address_in3: in std_logic_vector(2 downto 0 );
+				--R1_address_out3,R2_address_out3: out std_logic_vector(2 downto 0 );
+				Rout_in2: out std_logic_vector(2 downto 0 );
+				Rout_out2: out std_logic_vector(2 downto 0 )
 				
 				);
 end Mem_WB_Buffer;

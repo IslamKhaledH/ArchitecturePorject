@@ -33,7 +33,7 @@ entity Ext_Mem_Buffer is
 				op_code_output: out std_logic_vector(4 downto 0);
 				mem_mux_output : out std_logic;                              --mickey mux
 				R1_regfile_output: out std_logic_vector(15 downto 0);
-				ALU_address_output,stack_address_output : out std_logic_vector(9 downto 0);
+				--ALU_address_output,stack_address_output : out std_logic_vector(9 downto 0);
 				ALU_out_output : out std_logic_vector(15 downto 0);
 				Z_output: out std_logic;
 				NF_output: out std_logic;
@@ -48,7 +48,12 @@ entity Ext_Mem_Buffer is
 				LDM_immediate_output : out std_logic_vector(15 downto 0);
 				load_store_address_output : out std_logic_vector(9 downto 0);
 				Stack_WriteEnable_input1, StackPushPop_signal_input1 : in std_logic;
-				Stack_WriteEnable_output1, StackPushPop_output1 : out std_logic
+				Stack_WriteEnable_output1, StackPushPop_output1 : out std_logic;
+				R1_address_in2,R2_address_in2: in std_logic_vector(2 downto 0 );
+				R1_address_out2,R2_address_out2: out std_logic_vector(2 downto 0 );
+				Rout_in1: out std_logic_vector(2 downto 0 );
+				Rout_out1: out std_logic_vector(2 downto 0 )
+				
 				
 				);
 end Ext_Mem_Buffer;
