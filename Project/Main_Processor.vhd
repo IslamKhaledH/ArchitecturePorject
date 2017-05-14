@@ -351,6 +351,22 @@ Generic ( n : integer := 16);
 			);
 	end component;
 --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+	component syncram is
+	Generic ( n : integer := 8);
+				port ( clk : in std_logic;
+				we : in std_logic;
+				address : in std_logic_vector(n-1 downto 0);
+				datain : in std_logic_vector(15 downto 0);
+				dataout : out std_logic_vector(15 downto 0);
+				dataout0 : out std_logic_vector(15 downto 0);
+				dataout1 : out std_logic_vector(15 downto 0) 
+				);
+	end component;
+
+
+
+-------------------------------------------------------------------------------------------------------------------
 component syncram2 is
 Generic ( n : integer := 8);
 port ( clk,rst : in std_logic;
@@ -490,8 +506,25 @@ END component;
 	signal NF_signal1:  std_logic;
 	signal v_signal1:  std_logic;
 	signal C_signal1: std_logic;
-	Execution_Output_signal1 : std_logic_vector(15 downto 0);
+	signal Execution_Output_signal1 : std_logic_vector(15 downto 0);
 
+	
+--MEM_WB signals
+
+	signal pc_mux_signal3 : std_logic_vector(1 downto 0);
+	
+	signal outport_en_signal3 : std_logic;
+	signal reg_write_signal3 : std_logic;
+	
+	
+	signal write_data_reg_mux_signal3 :  std_logic; 
+	               
+	signal write_back_mux_signal3 :  std_logic_vector(1 downto 0);
+	signal	LDM_immediate_signal2:  std_logic_vector(15 downto 0 );
+
+
+
+ 
 	begin
 	
 
@@ -508,7 +541,9 @@ END component;
 	--ALU1: ALU port map(CLK,RESET,'1',OPcode_signal2,R1_out_signal1,R2_out_signal1,Output_signal, R_shift_out_signal,ZF_signal,N_signal,v_signal,C_signal);	
 	Execute_map : Execution port map(CLK,RESET,enable,OPcode_signal2,R1_signal2,R2_signal2,ROut_Alu_signal,ROut_Mem_signal,R1_out_signal1,R2_Out_signal,R_shift_out_signal,Alu_dataout_signal,Mem_dataout_signal,Execution_Output_signal,Z_signal,NF_signal,v_signal,C_signal);
 	Buffer3 : Ext_Mem_Buffer port map(CLK,RESET,enable,pc_mux_signal1,OPcode_signa2,mem_mux_signal1,R1_out_signal1,Execution_Output_signal,Z_signal,NF_signal,v_signal,C_signal,outport_en_signal1,reg_write_signal1,mem_write_signal1,write_data_reg_mux_signal1,write_back_mux_signal1,LDM_immediate_signal,LDD_Memory_signal,pc_mux_signal2,OPcode_signal3,mem_mux_signal2,Execution_Output_signal1,Z_signal1,NF_signal1,v_signal1,C_signal1,outport_en_signal2,reg_write_signal2,mem_write_signal2,write_data_reg_mux_signal2,write_back_mux_signal2,LDM_immediate_signal1,LDD_Memory_signal1);
-	Meomrey_map : Memory port map();
+	Memory_map : Memory port map(CLK,RESET,mem_mux_signal2,mem_write_signal2,st)
+	Buffer4 : Mem_WB_Buffer port map(Clk,RESET,enable,pc_mux_signal2,outport_en_signal2,reg_write_signal2,write_data_reg_mux_signal2,write_back_mux_signal2,LDM_immediate_signal1,pc_mux_signal3,outport_en_signal3,reg_write_signal3,write_data_reg_mux_signal3,write_back_mux_signal3,LDM_immediate_signal2);
+	
 	--  Buffer3:
 --  Memory:
 --	Buffer4:
