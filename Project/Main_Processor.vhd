@@ -59,6 +59,7 @@ architecture Main_Processor_arch of Main_Processor is
 ------------------------------------------------------------------------------------------------------------------------------------
 		component Execution IS
 			port(
+<<<<<<< HEAD
 					Clk,Rst,enable : in std_logic;
 					OpCode : in  std_logic_vector(4 downto 0);
 					R1_Reg1,R2_Reg1,ROut_Alu1,ROut_Mem1: in std_logic_vector(2 downto 0);
@@ -75,6 +76,24 @@ architecture Main_Processor_arch of Main_Processor is
 					NF_F: out std_logic;
 					V_F: out std_logic;
 					C_F: out std_logic
+=======
+				Clk,Rst,enable : in std_logic;
+				OpCode : in  std_logic_vector(4 downto 0);
+				R1_Reg1,R2_Reg1,ROut_Alu1,ROut_Mem1: in std_logic_vector(2 downto 0);
+				--R1_address,R2_address: in std_logic_vector(2 downto 0);
+				R1_dec: in  std_logic_vector(15 downto 0);
+				R2_dec: in  std_logic_vector(15 downto 0);
+				n : in std_logic_vector (3 downto 0);
+				--R1_Reg,R2_Reg,ROut_Alu,ROut_Mem: in std_logic_vector(2 downto 0);
+				Alu_Output1 , Meomry_Output1: in std_logic_vector(15 downto 0);
+				
+				Execution_Output: out std_logic_vector(15 downto 0);
+				--WriteBackSignal : in std_logic;
+				Z_F: out std_logic;
+				NF_F: out std_logic;
+				V_F: out std_logic;
+				C_F: out std_logic
+>>>>>>> ac977cf3d0e475d0a2ed1692bc907efcaabe994c
 			);
 		end component;
 		
@@ -82,6 +101,7 @@ architecture Main_Processor_arch of Main_Processor is
 		
 ------------------------------------------------------------------------------------------------------------------------------------	
 		component ALU is
+<<<<<<< HEAD
 	  port (
 		Clk,Rst,enable : in std_logic;
 		OpCode : in  std_logic_vector(4 downto 0);
@@ -95,22 +115,51 @@ architecture Main_Processor_arch of Main_Processor is
 		C: out std_logic
 		);
 	end  component;
+=======
+			  port (
+				Clk,Rst,enable : in std_logic;
+				OpCode : in  std_logic_vector(4 downto 0);
+				R1: in  std_logic_vector(15 downto 0);
+				R2: in  std_logic_vector(15 downto 0);
+				Output: out std_logic_vector(15 downto 0);
+				n : in std_logic_vector (3 downto 0);
+				Z_F: out std_logic;
+				NF_F: out std_logic;
+				v_F: out std_logic;
+				C_F: out std_logic
+				);
+		end  component;
+>>>>>>> ac977cf3d0e475d0a2ed1692bc907efcaabe994c
 
 ---------------------------------------------------------------------------------------------------------------------------
 
 		component Forwarding IS
+<<<<<<< HEAD
 	port(
 			R1_Reg,R2_Reg,ROut_Alu,ROut_Mem: in std_logic_vector(2 downto 0);
 			R1,R2: out std_logic_vector(15 downto 0);
 			R1_Mux,R2_Mux : out std_logic;
 			Alu_Output , Meomry_Output: in std_logic_vector(15 downto 0)
 			
+=======
+			port(
+				R1_Reg,R2_Reg,ROut_Alu,ROut_Mem: in std_logic_vector(2 downto 0);
+				R1,R2: out std_logic_vector(15 downto 0);    --out to handle hazard
+				R1_Mux,R2_Mux : out std_logic;               --out of mux
+				Alu_Output , Meomry_Output: in std_logic_vector(15 downto 0)
+				--WriteBackSignal : in std_logic
+				);
+		end component;
+>>>>>>> ac977cf3d0e475d0a2ed1692bc907efcaabe994c
 		
 		);
 	END component;
 		
 		
+<<<<<<< HEAD
 		
+=======
+>>>>>>> ac977cf3d0e475d0a2ed1692bc907efcaabe994c
 ----------------------------------------------------------------------------------------------------------------------------		
 		
 component Decode_Buffer is 
@@ -240,8 +289,11 @@ Generic ( n : integer := 16);
 	signal R2_signal2:  std_logic_vector(2 downto 0 ); 
 	signal ROut_Alu_signal:  std_logic_vector(2 downto 0 );   --R_out_ALu address
 	signal ROut_Mem_signal:  std_logic_vector(2 downto 0 );    --R_out_Mem addres
+<<<<<<< HEAD
 	signal Alu_dataout_signal:  std_logic_vector(15 downto 0 );   --R_out_ALu address
 	signal Mem_dataout_signal:  std_logic_vector(15 downto 0 );    --R_out_Mem addres
+=======
+>>>>>>> ac977cf3d0e475d0a2ed1692bc907efcaabe994c
 	
 
 --Execution signals 
@@ -264,7 +316,11 @@ Generic ( n : integer := 16);
 	Decoder: REG generic map (n=>16)port map(CLK,RESET,"1111000011110000",R1_Out_signal,R2_Out_signal,write_enable,Rout_signal,R1_signal,R2_signal,inport_en_output_signal,datavsinport,Shift_Mux,OPcode_signal,OPcode_signal1);
 	Buffer2 : Decode_Buffer port map(CLK,RESET,R1_Out_signal,R2_Out_signal,Rout_signal,R1_out_signal1,R2_out_signal1,Rout_out_signal1,R_shift_signal,R_shift_out_signal,OPcode_signal1,OPcode_signal2,R1_signal,R2_signal,R1_signal2,R2_signal2);	
 	--ALU1: ALU port map(CLK,RESET,'1',OPcode_signal2,R1_out_signal1,R2_out_signal1,Output_signal, R_shift_out_signal,ZF_signal,N_signal,v_signal,C_signal);	
+<<<<<<< HEAD
 	Execute : Execution port map(CLK,RESET,enable,OPcode_signal2,R1_signal2,R2_signal2,ROut_Alu_signal,ROut_Mem_signal,R1_out_signal1,R2_Out_signal,R_shift_out_signal,Alu_dataout_signal,Mem_dataout_signal,Execution_Output_signal,Z_signal,NF_signal,v_signal,C_signal);
+=======
+	Execute : Execution port map(CLK,RESET,enable,OPcode_signal2,R1_signal2,R2_signal2,ROut_Alu_signal,ROut_Mem_signal,R1_out_signal1,R2_Out_signal,R_shift_out_signal,Execution_Output_signal,Meomrey_Output_signal,Execution_Output_signal,Z_signal,NF_signal,v_signal,C_signal);
+>>>>>>> ac977cf3d0e475d0a2ed1692bc907efcaabe994c
 	
 	--  Buffer3:
 --  Memory:
