@@ -1,5 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.std_logic_1164.STD_LOGIC;
 use ieee.numeric_std.all;
 
 
@@ -13,7 +14,7 @@ entity Main_Processor is
 				
 				);
 end Main_Processor;
-n
+
 architecture Main_Processor_arch of Main_Processor is
 --------------------------------------------------------------------------------------------------------
 	component control_entity is
@@ -35,7 +36,9 @@ architecture Main_Processor_arch of Main_Processor is
 				write_back_mux : out std_logic_vector(1 downto 0);
 				int_flags_en : out std_logic;                  --  int to take flags from meomry to alu
 				alu_control : out std_logic_vector(4 downto 0);                 --change it according to alu control (3 bit ****)علي حسب شغلك   'musgi'
-				mem_mux : out std_logic
+				mem_mux : out std_logic;
+				
+				Stack_WriteEnable_control, StackPushPop_control : out std_logic
 				
 				
 				
@@ -90,7 +93,7 @@ end  component;
 				Rout: out std_logic_vector(2 downto 0 ); --for write back
 				R_shift: out std_logic_vector(3 downto 0 );
 				LDD_Memory: out std_logic_vector(9 downto 0 ); --load value from memory to register
-				LDM_immediate: out std_logic_vector(15 downto 0 ) ;--load immediate value from user to register
+				LDM_immediate: out std_logic_vector(15 downto 0 ) --load immediate value from user to register
 				
 				
 				
@@ -118,6 +121,7 @@ end  component;
 				--int_flags_en_output : out std_logic;                  --  int to take flags from meomry to alu
 				--alu_control_output : out std_logic_vector(4 downto 0);                 --change it according to alu control (3 bit ****)??? ??? ????   'musgi'
 				--mem_mux_output : out std_logic
+				);
 		end component;
 		
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -172,6 +176,8 @@ component Decode_Buffer is
 				int_flags_en_output : out std_logic;                  --  int to take flags from meomry to alu
 				alu_control_output : out std_logic_vector(4 downto 0);                 --change it according to alu control (3 bit ****)??? ??? ????   'musgi'
 				mem_mux_output : out std_logic;
+				Stack_WriteEnable_input, StackPushPop_signal_input : in std_logic;
+				Stack_WriteEnable_output, StackPushPop_output : out std_logic
 				
 
 				
@@ -207,7 +213,7 @@ component Ext_Mem_Buffer is
 				pc_mux_output : out std_logic_vector(1 downto 0);
 				op_code_output: out std_logic_vector(4 downto 0);
 				mem_mux_output : out std_logic;                              --mickey mux
-				--R1_regfile_output: out std_logic_vector(15 downto 0);
+				R1_regfile_output: out std_logic_vector(15 downto 0);
 				ALU_address_output,stack_address_output : out std_logic_vector(9 downto 0);
 				ALU_out_output : out std_logic_vector(15 downto 0);
 				Z_output: out std_logic;
@@ -221,7 +227,10 @@ component Ext_Mem_Buffer is
 				write_data_reg_mux_output : out std_logic; 
 				write_back_mux_output: out std_logic_vector(1 downto 0);
 				LDM_immediate_output : out std_logic_vector(15 downto 0);
-				load_store_address_output : out std_logic_vector(9 downto 0)
+				load_store_address_output : out std_logic_vector(9 downto 0);
+				Stack_WriteEnable_input1, StackPushPop_signal_input1 : in std_logic;
+				Stack_WriteEnable_output1, StackPushPop_output1 : out std_logic
+				
 				);
 end component;
 
@@ -383,7 +392,8 @@ end component;
 ------------------------------------------------------------------------------------------------------------------------
 
 component Memory is
-PORT  ( Clk, rst, Mux_Selector, Memory_WriteEnable, Stack_WriteEnable, StackPushPop, FlagEnable : in std_logic; --StackPushPop 0: psuh, 1: pop
+PORT  ( Clk, rst, Mux_Selector, Memory_WriteEnable, Stack_WriteEnable, StackPushPop : in std_logic; --StackPushPop 0: psuh, 1: pop
+		--FlagEnable : in std_logic;
 	InputAddress, LoadAdress : in std_logic_vector(9 downto 0);
 	DataIn : in std_logic_vector(15 downto 0);
 	DataOut, M0, M1 : out std_logic_vector (15 downto 0);
@@ -399,7 +409,7 @@ component WriteBack is
 PORT  ( Clk, rst : in std_logic;
 	DataIn1, DataIn2, DataIn3 : in std_logic_vector(15 downto 0);
 	ControlIn : in std_logic_vector (1 downto 0);
-	DataOut : out std_logic_vector (15 downto 0);
+	DataOut : out std_logic_vector (15 downto 0)
 );
 END component;
 
@@ -420,7 +430,7 @@ END component;
 	signal write_back_mux_signal :  std_logic_vector(1 downto 0);
 	signal int_flags_en_signal :  std_logic;                  
 	signal alu_control_signal :  std_logic_vector(4 downto 0);                 
-	signal mem_mux_signal : std_logic
+	signal mem_mux_signal : std_logic;
 	
 	signal nop_enable_signal1 : std_logic;
 	signal pc_mux_signal1 : std_logic_vector(1 downto 0);
@@ -434,8 +444,8 @@ END component;
 	signal write_back_mux_signal1 :  std_logic_vector(1 downto 0);
 	signal int_flags_en_signal1 :  std_logic;                  
 	signal alu_control_signal1 :  std_logic_vector(4 downto 0);                 
-	signal mem_mux_signal1 : std_logic
-
+	signal mem_mux_signal1 : std_logic;
+	signal Stack_WriteEnable_signal, StackPushPop_signal :  std_logic ;
 
 --Fetch signals
 	signal Sel_signal:  std_logic_vector (1 downto 0);
@@ -473,7 +483,9 @@ END component;
 	signal ROut_Alu_signal:  std_logic_vector(2 downto 0 );   --R_out_ALu address
 	signal ROut_Mem_signal:  std_logic_vector(2 downto 0 );    --R_out_Mem addres
 	signal Alu_dataout_signal:  std_logic_vector(15 downto 0 );   --R_out_ALu address
-	signal Mem_dataout_signal:  std_logic_vector(15 downto 0 );    --R_out_Mem addres
+	--signal Mem_dataout_signal:  std_logic_vector(15 downto 0 );    --R_out_Mem addres
+	signal Stack_WriteEnable_signal1 : std_logic;
+	signal StackPushPop_signal1 : std_logic;
 	
 
 --Execution signals 
@@ -507,7 +519,16 @@ END component;
 	signal v_signal1:  std_logic;
 	signal C_signal1: std_logic;
 	signal Execution_Output_signal1 : std_logic_vector(15 downto 0);
+	signal Stack_WriteEnable_signal2, StackPushPop_signal2 : std_logic;
+	signal R1_out_signal2 : std_logic_vector(15 downto 0 );
+--Memory
 
+	signal Mem_dataout_signal,M0_signal,M1_signal : std_logic_vector(15 downto 0);
+	signal Z_signal2:  std_logic;
+	signal NF_signal2:  std_logic;
+	signal v_signal2:  std_logic;
+	signal C_signal2: std_logic;
+	signal Branch_out_signal : std_logic_vector (15 downto 0);
 	
 --MEM_WB signals
 
@@ -532,16 +553,16 @@ END component;
 --Comments :1)sel should be entered by control unit
 			--2)what reset do ?
 			
-	FETCH :	 MUX_Fetch generic map (n=>16)port map(Sel_signal,PC2_signal,PC3_signal,PC4_signal,CLK,Out_instruction_signal,INPORT,OutPort_signal,RESET);
+	FETCH :	 MUX_Fetch generic map (n=>16)port map(pc_mux_signal3,Branch_out_signal,M0_signal,M1_signal,CLK,Out_instruction_signal,INPORT,OutPort_signal,RESET);
 	BUFFER1: fetch_Buffer generic map (n =>16) port map (CLK,RESET,OutPort_signal,Out_instruction_signal,inport_en_output_signal,instruction_output_signal,OPcode_signal,R1_signal,R2_signal,Rout_signal,R_shift_signal,LDD_Memory_signal,LDM_immediate_signal);
 	
 	Decoder: REG generic map (n=>16)port map(CLK,RESET,"1111000011110000",R1_Out_signal,R2_Out_signal,write_enable,Rout_signal,R1_signal,R2_signal,inport_en_output_signal,datavsinport,Shift_Mux,OPcode_signal,OPcode_signal1);
-	control_map : control_entity port map(OPcode_signal1,nop_enable_signal,pc_mux_signal,inport_en_signal,outport_en_signal,reg_write_signal,mem_write_signal,write_data_reg_mux_signal,Shift_Mux_signal,write_back_mux_signal,int_flags_en_signal,alu_control_signal,mem_mux_signal);
-	Buffer2 : Decode_Buffer port map(CLK,RESET,R1_Out_signal,R2_Out_signal,Rout_signal,R1_out_signal1,R2_out_signal1,Rout_out_signal1,R_shift_signal,R_shift_out_signal,OPcode_signal1,OPcode_signal2,R1_signal,R2_signal,R1_signal2,R2_signal2,pc_mux_signal,outport_en_signal,reg_write_signal,mem_write_signal,write_data_reg_mux_signal,write_back_mux_signal,int_flags_en_signal,alu_control_signal,mem_mux_signal,pc_mux_signal1,outport_en_signal1,reg_write_signal1,mem_write_signal1,write_data_reg_mux_signal1,write_back_mux_signal1,int_flags_en_signal1,alu_control_signal1,mem_mux_signal1);	
-	--ALU1: ALU port map(CLK,RESET,'1',OPcode_signal2,R1_out_signal1,R2_out_signal1,Output_signal, R_shift_out_signal,ZF_signal,N_signal,v_signal,C_signal);	
-	Execute_map : Execution port map(CLK,RESET,enable,OPcode_signal2,R1_signal2,R2_signal2,ROut_Alu_signal,ROut_Mem_signal,R1_out_signal1,R2_Out_signal,R_shift_out_signal,Alu_dataout_signal,Mem_dataout_signal,Execution_Output_signal,Z_signal,NF_signal,v_signal,C_signal);
-	Buffer3 : Ext_Mem_Buffer port map(CLK,RESET,enable,pc_mux_signal1,OPcode_signa2,mem_mux_signal1,R1_out_signal1,Execution_Output_signal,Z_signal,NF_signal,v_signal,C_signal,outport_en_signal1,reg_write_signal1,mem_write_signal1,write_data_reg_mux_signal1,write_back_mux_signal1,LDM_immediate_signal,LDD_Memory_signal,pc_mux_signal2,OPcode_signal3,mem_mux_signal2,Execution_Output_signal1,Z_signal1,NF_signal1,v_signal1,C_signal1,outport_en_signal2,reg_write_signal2,mem_write_signal2,write_data_reg_mux_signal2,write_back_mux_signal2,LDM_immediate_signal1,LDD_Memory_signal1);
-	Memory_map : Memory port map(CLK,RESET,mem_mux_signal2,mem_write_signal2,st)
+	control_map : control_entity port map(OPcode_signal1,nop_enable_signal,pc_mux_signal,inport_en_signal,outport_en_signal,reg_write_signal,mem_write_signal,write_data_reg_mux_signal,Shift_Mux_signal,write_back_mux_signal,int_flags_en_signal,alu_control_signal,mem_mux_signal,Stack_WriteEnable_signal, StackPushPop_signal);
+	Buffer2 : Decode_Buffer port map(CLK,RESET,R1_Out_signal,R2_Out_signal,Rout_signal,R1_out_signal1,R2_out_signal1,Rout_out_signal1,R_shift_signal,R_shift_out_signal,OPcode_signal1,OPcode_signal2,R1_signal,R2_signal,R1_signal2,R2_signal2,pc_mux_signal,outport_en_signal,reg_write_signal,mem_write_signal,write_data_reg_mux_signal,write_back_mux_signal,int_flags_en_signal,alu_control_signal,mem_mux_signal,pc_mux_signal1,outport_en_signal1,reg_write_signal1,mem_write_signal1,write_data_reg_mux_signal1,write_back_mux_signal1,int_flags_en_signal1,alu_control_signal1,mem_mux_signal1,Stack_WriteEnable_signal, StackPushPop_signal,Stack_WriteEnable_signal1, StackPushPop_signal1);	
+	
+	Execute_map : Execution port map(CLK,RESET,enable,OPcode_signal2,R1_signal2,R2_signal2,reg_write_signal2,reg_write_signal3,R1_out_signal1,R2_Out_signal,R_shift_out_signal,Execution_Output_signal1,Mem_dataout_signal,Execution_Output_signal,Z_signal,NF_signal,v_signal,C_signal);
+	Buffer3 : Ext_Mem_Buffer port map(CLK,RESET,enable,pc_mux_signal1,OPcode_signal2,mem_mux_signal1,R1_out_signal1,Execution_Output_signal,Z_signal,NF_signal,v_signal,C_signal,outport_en_signal1,reg_write_signal1,mem_write_signal1,write_data_reg_mux_signal1,write_back_mux_signal1,LDM_immediate_signal,LDD_Memory_signal,pc_mux_signal2,OPcode_signal3,mem_mux_signal2,R1_out_signal2,Execution_Output_signal1,Z_signal1,NF_signal1,v_signal1,C_signal1,outport_en_signal2,reg_write_signal2,mem_write_signal2,write_data_reg_mux_signal2,write_back_mux_signal2,LDM_immediate_signal1,LDD_Memory_signal1,Stack_WriteEnable_signal1, StackPushPop_signal1,Stack_WriteEnable_signal2, StackPushPop_signal2);
+	Memory_map : Memory port map(CLK,RESET,mem_mux_signal2,mem_write_signal2,Stack_WriteEnable_signa2, StackPushPop_signa2,stackaddress"mickey"!!,LDD_Memory_signal1,Execution_Output_signal1,Mem_dataout_signal,M0_signal,M1_signal,Z_signal1,NF_signal1,v_signal1,C_signal1,Z_signal2,NF_signal2,v_signal2,C_signal2,OPcode_signal3,R1_out_signal2,Branch_out_signal)
 	Buffer4 : Mem_WB_Buffer port map(Clk,RESET,enable,pc_mux_signal2,outport_en_signal2,reg_write_signal2,write_data_reg_mux_signal2,write_back_mux_signal2,LDM_immediate_signal1,pc_mux_signal3,outport_en_signal3,reg_write_signal3,write_data_reg_mux_signal3,write_back_mux_signal3,LDM_immediate_signal2);
 	
 	--  Buffer3:

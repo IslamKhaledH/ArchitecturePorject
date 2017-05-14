@@ -22,7 +22,10 @@ entity control_entity is
 			write_back_mux : out std_logic_vector(1 downto 0);
 			int_flags_en : out std_logic;                  --  int to take flags from meomry to alu
 			alu_control : out std_logic_vector(4 downto 0);                 --change it according to alu control (3 bit ****)علي حسب شغلك   'musgi'
-			mem_mux : out std_logic
+			mem_mux : out std_logic;
+			
+			 Stack_WriteEnable_control, StackPushPop_control: out std_logic
+			 -- FlagEnable : in std_logic;
 			
 			
 			
@@ -118,7 +121,12 @@ Architecture arch_control_entity of control_entity is
 		
 		mem_mux <=			'1' when (op_code_signal>="01100" and op_code_signal<="01110") or (op_code_signal>="11000" and op_code_signal<="11010") or op_code_signal="11111" else
 							'0';
-						
+		
+		Stack_WriteEnable_control <= 	'1' when op_code_signal="01100" or op_code_signal="01101"  or op_code_signal="11000" or op_code_signal="11001" or op_code_signal="11010" else
+										'0';
+		
+		StackPushPop_control <= 	    '1' when   op_code_signal="01101"  or op_code_signal="11001" or op_code_signal="11010" else
+										'0';
 		
 --++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

@@ -3,7 +3,8 @@ Use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 Entity Memory is
-PORT  ( Clk, rst, Mux_Selector, Memory_WriteEnable, Stack_WriteEnable, StackPushPop, FlagEnable : in std_logic; --StackPushPop 0: psuh, 1: pop
+PORT  ( Clk, rst, Mux_Selector, Memory_WriteEnable, Stack_WriteEnable, StackPushPop : in std_logic; --StackPushPop 0: psuh, 1: pop
+		--FlagEnable : in std_logic;
 	InputAddress, LoadAdress : in std_logic_vector(9 downto 0);
 	DataIn : in std_logic_vector(15 downto 0);
 	DataOut, M0, M1 : out std_logic_vector (15 downto 0);

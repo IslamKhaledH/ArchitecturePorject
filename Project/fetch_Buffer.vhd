@@ -41,7 +41,7 @@ entity fetch_Buffer is
 				--mem_mux_input : in std_logic;
 				
 				
-				pc_mux_output : out std_logic_vector(1 downto 0);
+				pc_mux_output : out std_logic_vector(1 downto 0)
 				--outport_en_output : out std_logic; 
 				--reg_write_output : out std_logic; 
 				--mem_write_output : out std_logic; 

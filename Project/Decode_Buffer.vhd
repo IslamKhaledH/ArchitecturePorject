@@ -50,6 +50,8 @@ entity Decode_Buffer is
 				alu_control_output : out std_logic_vector(4 downto 0);                 --change it according to alu control (3 bit ****)??? ??? ????   'musgi'
 				mem_mux_output : out std_logic;
 				
+				Stack_WriteEnable_input, StackPushPop_signal_input : in std_logic;
+				Stack_WriteEnable_output, StackPushPop_output : out std_logic
 
 				
 				

@@ -32,7 +32,7 @@ entity Ext_Mem_Buffer is
 				pc_mux_output : out std_logic_vector(1 downto 0);
 				op_code_output: out std_logic_vector(4 downto 0);
 				mem_mux_output : out std_logic;                              --mickey mux
-				--R1_regfile_output: out std_logic_vector(15 downto 0);
+				R1_regfile_output: out std_logic_vector(15 downto 0);
 				ALU_address_output,stack_address_output : out std_logic_vector(9 downto 0);
 				ALU_out_output : out std_logic_vector(15 downto 0);
 				Z_output: out std_logic;
@@ -46,7 +46,10 @@ entity Ext_Mem_Buffer is
 				write_data_reg_mux_output : out std_logic; 
 				write_back_mux_output: out std_logic_vector(1 downto 0);
 				LDM_immediate_output : out std_logic_vector(15 downto 0);
-				load_store_address_output : out std_logic_vector(9 downto 0)
+				load_store_address_output : out std_logic_vector(9 downto 0);
+				Stack_WriteEnable_input1, StackPushPop_signal_input1 : in std_logic;
+				Stack_WriteEnable_output1, StackPushPop_output1 : out std_logic
+				
 				);
 end Ext_Mem_Buffer;
 
@@ -75,7 +78,7 @@ architecture arch_Ext_Mem_Buffer of Ext_Mem_Buffer is
 		op_code_map :				nreg generic map (n=>5)port map(Clk,Rst,enable,op_code_input,op_code_output);
 		mem_mux_map :		 		Regis port map(Clk,Rst,enable,mem_mux_input,mem_mux_output);
 		R1_regfile_map : 			nreg generic map (n=>16)port map(Clk,Rst,enable,R1_regfile_input,R1_regfile_output);
-		ALU_address_map : 			nreg generic map (n=>10)port map(Clk,Rst,enable,ALU_address_input,ALU_address_output);
+		--ALU_address_map : 			nreg generic map (n=>10)port map(Clk,Rst,enable,ALU_address_input,ALU_address_output);
 		ALU_out_map : 				nreg generic map (n=>16)port map(Clk,Rst,enable,ALU_out_input,ALU_out_output);
 		Z_map :		 				Regis port map(Clk,Rst,enable,Z_input,Z_output);
 		NF_map :		 			Regis port map(Clk,Rst,enable,NF_input,NF_output);
