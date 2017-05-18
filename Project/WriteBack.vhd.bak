@@ -6,7 +6,7 @@ Entity WriteBack is
 PORT  ( Clk, rst : in std_logic;
 	DataIn1, DataIn2, DataIn3 : in std_logic_vector(15 downto 0);
 	ControlIn : in std_logic_vector (1 downto 0);
-	DataOut : out std_logic_vector (15 downto 0)
+	DataOut : out std_logic_vector (15 downto 0);
 );
 END WriteBack;
 

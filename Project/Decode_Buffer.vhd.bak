@@ -28,15 +28,19 @@ entity Decode_Buffer is
 				R1_address_out,R2_address_out: out std_logic_vector(2 downto 0 );
 				
 				
+				
+				
+				
 				pc_mux_input : in std_logic_vector(1 downto 0);
 				outport_en_input : in std_logic; 
 				reg_write_input : in std_logic; 
 				mem_write_input : in std_logic; 
 				write_data_reg_mux_input : in std_logic; 
+				                   -- to know if make shift or not
 				write_back_mux_input : in std_logic_vector(1 downto 0);
 				int_flags_en_input : in std_logic;                  --  int to take flags from meomry to alu
 				alu_control_input : in std_logic_vector(4 downto 0);                 --change it according to alu control (3 bit ****)??? ??? ????   'musgi'
-				mem_mux_input : in std_logic;
+				mem_mux_input : in std_logic
 				
 				
 				pc_mux_output : out std_logic_vector(1 downto 0);
@@ -48,10 +52,7 @@ entity Decode_Buffer is
 				write_back_mux_output : out std_logic_vector(1 downto 0);
 				int_flags_en_output : out std_logic;                  --  int to take flags from meomry to alu
 				alu_control_output : out std_logic_vector(4 downto 0);                 --change it according to alu control (3 bit ****)??? ??? ????   'musgi'
-				mem_mux_output : out std_logic;
-				
-				Stack_WriteEnable_input, StackPushPop_signal_input : in std_logic;
-				Stack_WriteEnable_output, StackPushPop_output : out std_logic
+				mem_mux_output : out std_logic
 
 				
 				
@@ -77,17 +78,16 @@ architecture Decode_Buffer_arch of Decode_Buffer is
 				R1_address_out<=R1_address_in;
 				R2_address_out<=R2_address_in;
 				
-				pc_mux_output <= pc_mux_input;
-				outport_en_output <=outport_en_input;
-				reg_write_output <=reg_write_input;
-				mem_write_output <= mem_write_input; 
-				write_data_reg_mux_output <= write_data_reg_mux_input;
+				pc_mux_output : out std_logic_vector(1 downto 0);
+				outport_en_output : out std_logic; 
+				reg_write_output : out std_logic; 
+				mem_write_output : out std_logic; 
+				write_data_reg_mux_output : out std_logic; 
 				
-				write_back_mux_output <= write_back_mux_input;
-				int_flags_en_output <= int_flags_en_input;               --  int to take flags from meomry to alu
-				alu_control_output <= alu_control_input;                --change it according to alu control (3 bit ****)??? ??? ????   'musgi'
-				mem_mux_output <= mem_mux_input;
-				
+				write_back_mux_output : out std_logic_vector(1 downto 0);
+				int_flags_en_output : out std_logic;                  --  int to take flags from meomry to alu
+				alu_control_output : out std_logic_vector(4 downto 0);                 --change it according to alu control (3 bit ****)??? ??? ????   'musgi'
+				mem_mux_output : out std_logic
 				
 				
 			
